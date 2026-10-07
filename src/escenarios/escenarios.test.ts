@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { acomodar } from '../acomodador/acomodar'
 import { CONTENEDORES } from '../catalogo/contenedores'
 import type { ItemListo } from '../dominio/tipos'
 import { ESCENARIOS } from './escenarios'
@@ -61,12 +62,17 @@ describe('los 10 escenarios de la línea base', () => {
     })
 
     if (escenario.sobrecargaDePeso) {
-      test('el peso total supera la carga útil', () => {
-        expect(pesoTotal).toBeGreaterThan(contenedor.cargaUtil)
+      test('el peso total ronda el 115% de la carga útil', () => {
+        const proporcion = pesoTotal / contenedor.cargaUtil
+        expect(proporcion).toBeGreaterThanOrEqual(1.1)
+        expect(proporcion).toBeLessThanOrEqual(1.2)
       })
     } else {
-      test('el volumen ronda el 115% del contenedor', () => {
-        const proporcion = volumenTotal / volumenContenedor
+      test('el volumen ronda el 115% de lo que entra', () => {
+        const disposicion = acomodar(escenario.items, contenedor)
+        const porId = new Map(escenario.items.map((item) => [item.id, item]))
+        const colocado = suma(disposicion.colocados.map((bulto) => volumenDe({ ...porId.get(bulto.item)!, cantidad: 1 })))
+        const proporcion = volumenTotal / colocado
         expect(proporcion).toBeGreaterThanOrEqual(1.1)
         expect(proporcion).toBeLessThanOrEqual(1.2)
       })
@@ -75,5 +81,12 @@ describe('los 10 escenarios de la línea base', () => {
         expect(pesoTotal).toBeLessThan(contenedor.cargaUtil)
       })
     }
+
+    test('ningún tipo queda entero afuera', () => {
+      const disposicion = acomodar(escenario.items, contenedor)
+      for (const item of escenario.items) {
+        expect(disposicion.colocados.some((bulto) => bulto.item === item.id)).toBe(true)
+      }
+    })
   })
 })

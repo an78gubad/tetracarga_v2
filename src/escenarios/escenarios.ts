@@ -3,7 +3,8 @@ import type { ContenedorId, ItemListo, Kilos, Milimetros } from '../dominio/tipo
 /**
  * Los 10 escenarios de la línea base (RNF-05). Cada uno trae más carga de la que entra, ninguno
  * de sus tipos alcanza solo para llenar el contenedor, y no pasan de 200 bultos (RNF-04). Van
- * calibrados por volumen a ~115% del contenedor, salvo la sobrecarga de peso, que mide la carga
+ * calibrados a ~115% de lo que entra: el volumen de la carga ronda 1,15 veces el que el
+ * acomodador coloca, sin tipos enteros afuera. La sobrecarga de peso trae ~115% de la carga
  * útil. Medidas y pesos son declarados, como los describiría un usuario.
  *
  * No se tocan para que algo pase: cambiarlos lo decide el usuario.
@@ -52,9 +53,9 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '20',
     sobrecargaDePeso: false,
     items: [
-      item('caja-chica', 'cajas chicas', 100, [600, 400, 400], 12),
-      item('caja-mediana', 'cajas medianas', 60, [800, 600, 500], 20),
-      item('caja-grande', 'cajas grandes', 30, [1000, 800, 600], 35),
+      item('caja-chica', 'cajas chicas', 78, [600, 400, 400], 12),
+      item('caja-mediana', 'cajas medianas', 47, [800, 600, 500], 20),
+      item('caja-grande', 'cajas grandes', 23, [1000, 800, 600], 35),
     ],
   },
   {
@@ -63,8 +64,8 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '20',
     sobrecargaDePeso: false,
     items: [
-      item('tambor', 'tambores de 200 litros', 60, [585, 585, 877], 190, { orientacionObligatoria: true }),
-      item('caja', 'cajas', 70, [1000, 600, 500], 40),
+      item('tambor', 'tambores de 200 litros', 43, [585, 585, 877], 190, { orientacionObligatoria: true }),
+      item('caja', 'cajas', 50, [1000, 600, 500], 40),
     ],
   },
   {
@@ -73,9 +74,9 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '40',
     sobrecargaDePeso: false,
     items: [
-      item('heladera', 'heladeras', 40, [700, 700, 1800], 75, { orientacionObligatoria: true, pesoMaximoEncima: 50 }),
+      item('heladera', 'heladeras', 30, [700, 700, 1800], 75, { orientacionObligatoria: true, pesoMaximoEncima: 50 }),
       item('lavarropas', 'lavarropas', 40, [600, 600, 850], 70, { orientacionObligatoria: true, pesoMaximoEncima: 50 }),
-      item('caja', 'cajas', 75, [1000, 800, 500], 30),
+      item('caja', 'cajas', 90, [600, 500, 400], 15),
     ],
   },
   {
@@ -84,9 +85,9 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '40',
     sobrecargaDePeso: false,
     items: [
-      item('ibc', 'contenedores IBC de 1000 litros', 15, [1200, 1000, 1160], 1050, { noApilable: true }),
-      item('bidon', 'bidones de 20 litros', 100, [290, 246, 385], 21),
-      item('caja', 'cajas', 70, [1200, 800, 800], 45),
+      item('ibc', 'contenedores IBC de 1000 litros', 12, [1200, 1000, 1160], 1050, { noApilable: true }),
+      item('bidon', 'bidones de 20 litros', 30, [290, 246, 385], 21),
+      item('caja', 'cajas', 70, [1000, 600, 600], 30),
     ],
   },
   {
@@ -95,8 +96,8 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '40',
     sobrecargaDePeso: false,
     items: [
-      item('europallet', 'europallets cargados', 27, [1200, 800, 1500], 450),
-      item('pallet-arlog', 'pallets ARLOG cargados', 27, [1200, 1000, 1200], 400, { pesoMaximoEncima: 500 }),
+      item('europallet', 'europallets cargados', 18, [1200, 800, 1200], 450),
+      item('pallet-arlog', 'pallets ARLOG cargados', 24, [1200, 1000, 1000], 400, { pesoMaximoEncima: 500 }),
     ],
   },
   {
@@ -105,7 +106,7 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '20',
     sobrecargaDePeso: true,
     items: [
-      item('pieza', 'cajas de piezas metálicas', 120, [600, 400, 300], 180),
+      item('pieza', 'cajas de piezas metálicas', 97, [600, 400, 300], 180),
       item('motor', 'cajas de motores', 60, [800, 600, 400], 250),
     ],
   },
@@ -115,9 +116,9 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '40hc',
     sobrecargaDePeso: false,
     items: [
-      item('tablero', 'tableros eléctricos', 15, [1200, 800, 2500], 300, { orientacionObligatoria: true }),
-      item('caja-alta', 'cajas altas', 15, [1000, 1000, 2200], 250, { orientacionObligatoria: true }),
-      item('caja', 'cajas', 65, [800, 600, 600], 30),
+      item('tablero', 'tableros eléctricos', 12, [1200, 800, 2500], 300, { orientacionObligatoria: true }),
+      item('caja-alta', 'cajas altas', 12, [1000, 1000, 2200], 250, { orientacionObligatoria: true }),
+      item('caja', 'cajas', 50, [800, 600, 600], 30),
     ],
   },
   {
@@ -126,9 +127,9 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '40',
     sobrecargaDePeso: false,
     items: [
-      item('caja-grande', 'cajas grandes', 65, [1200, 800, 600], 35),
-      item('caja-mediana', 'cajas medianas', 70, [1000, 600, 600], 25),
-      item('caja-chica', 'cajas chicas', 65, [800, 600, 500], 18),
+      item('caja-grande', 'cajas grandes', 50, [1200, 800, 600], 35),
+      item('caja-mediana', 'cajas medianas', 66, [1000, 600, 600], 25),
+      item('caja-chica', 'cajas chicas', 84, [600, 500, 400], 18),
     ],
   },
   {
@@ -137,9 +138,9 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '20',
     sobrecargaDePeso: false,
     items: [
-      item('vidrio', 'cajas de vidrio', 80, [600, 500, 400], 20, { pesoMaximoEncima: 40 }),
-      item('caja-mediana', 'cajas medianas', 75, [800, 600, 400], 30, { pesoMaximoEncima: 100 }),
-      item('caja-pesada', 'cajas pesadas', 36, [1000, 800, 500], 80),
+      item('vidrio', 'cajas de vidrio', 60, [600, 500, 400], 20, { pesoMaximoEncima: 40 }),
+      item('caja-mediana', 'cajas medianas', 50, [800, 600, 400], 30, { pesoMaximoEncima: 100 }),
+      item('caja-pesada', 'cajas pesadas', 25, [1000, 800, 500], 80),
     ],
   },
   {
@@ -148,11 +149,11 @@ export const ESCENARIOS: readonly Escenario[] = [
     contenedor: '40hc',
     sobrecargaDePeso: false,
     items: [
-      item('tambor', 'tambores de 200 litros', 30, [585, 585, 877], 190, { orientacionObligatoria: true }),
-      item('ibc', 'contenedores IBC de 1000 litros', 8, [1200, 1000, 1160], 1050, { noApilable: true }),
-      item('heladera', 'heladeras', 20, [700, 700, 1800], 75, { orientacionObligatoria: true, pesoMaximoEncima: 50 }),
-      item('europallet', 'europallets cargados', 20, [1200, 800, 1500], 450),
-      item('caja', 'cajas', 90, [800, 600, 500], 25),
+      item('tambor', 'tambores de 200 litros', 24, [585, 585, 877], 190, { orientacionObligatoria: true }),
+      item('ibc', 'contenedores IBC de 1000 litros', 6, [1200, 1000, 1160], 1050, { noApilable: true }),
+      item('heladera', 'heladeras', 14, [700, 700, 1800], 75, { orientacionObligatoria: true, pesoMaximoEncima: 50 }),
+      item('europallet', 'europallets cargados', 10, [1200, 800, 1500], 450),
+      item('caja', 'cajas', 60, [800, 600, 500], 25),
     ],
   },
 ]
