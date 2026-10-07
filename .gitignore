@@ -1,0 +1,27 @@
+# Secretos
+.env
+.env.*
+!.env.example
+
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+build/
+*.tsbuildinfo
+
+# Tests y cobertura
+coverage/
+
+# Vercel
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor y sistema operativo
+.DS_Store
+Thumbs.db
+.idea/
