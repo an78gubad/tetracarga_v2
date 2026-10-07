@@ -31,7 +31,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
   Vitest, y test bulto por bulto (AC-14). Números a `eval/ultimo-informe.md`.
 
 ## 3. Feature B — Pantalla y vista 3D (RF-04, RF-05, RF-06, RF-10)
-- [ ] 12. Lista de ítems editable a mano: agregar, editar, eliminar, marcas de RF-06, estimado
+- [x] 12. Lista de ítems editable a mano: agregar, editar, eliminar, marcas de RF-06, estimado
   → declarado al editar (AC-12), selector de contenedor, consolidar bloqueado si falta algo.
 - [ ] 13. Escena Three.js: contenedor más un `InstancedMesh` por tipo, cámara orbital.
 - [ ] 14. Color por id estable del ítem (AC-09) y distinción entre bultos del mismo tipo.
