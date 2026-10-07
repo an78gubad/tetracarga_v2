@@ -23,7 +23,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
 - [x] 7. Validador en `src/validador/`, sin traer código de fuera de su carpeta: límites,
   superposición, apoyo del 80% contra bultos anteriores (AC-24), carga máxima, no apilable,
   orientación, peso encima propagado. Tests con disposiciones armadas a mano.
-- [ ] 8. Acomodador en `src/acomodador/`, con el orden de colocación de `CONTEXTO.md`;
+- [x] 8. Acomodador en `src/acomodador/`, con el orden de colocación de `CONTEXTO.md`;
   determinístico, con motivos "peso" y "volumen". AC-04 a AC-07, AC-15, AC-21, AC-23.
 - [ ] 9. Informe de aprovechamiento (RF-09) y validador bloqueante antes de devolver (RNF-03).
 - [ ] 10. Suite sobre los 10 escenarios: AC-10 y tiempo con 200 bultos (RNF-04).
