@@ -45,3 +45,9 @@ Por qué, medido en una versión anterior. **No repetir esta investigación.**
 - **Las fuentes de contenedores no coinciden al milímetro.** Cada naviera publica medidas y
   cargas útiles algo distintas y avisa que varían por unidad: cada entrada nombra la ficha
   exacta de la que sale.
+- **Los contenedores salen todos de Maersk, sin mezclar navieras.** Fichas "Container
+  specifications" de su guía de contenedores secos, que cierran: carga útil + tara = peso bruto.
+  Se descartó un PDF de Maersk Sudáfrica de 2014 con cifras distintas (2350 mm de ancho).
+- **La puerta es más chica que el interior y no se modela.** 2340 mm de ancho; 2280 mm de alto
+  en 20' y 40', 2585 mm en el high cube. Un bulto puede entrar en el interior y no pasar por la
+  puerta. El PRD no lo pide; si hace falta, es un requerimiento nuevo.
