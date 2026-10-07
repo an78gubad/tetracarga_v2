@@ -26,7 +26,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
 - [x] 8. Acomodador en `src/acomodador/`, con el orden de colocación de `CONTEXTO.md`;
   determinístico, con motivos "peso" y "volumen". AC-04 a AC-07, AC-15, AC-21, AC-23.
 - [x] 9. Informe de aprovechamiento (RF-09) y validador bloqueante antes de devolver (RNF-03).
-- [ ] 10. Suite sobre los 10 escenarios: AC-10 y tiempo con 200 bultos (RNF-04).
+- [x] 10. Suite sobre los 10 escenarios: AC-10 y tiempo con 200 bultos (RNF-04).
 - [ ] 11. Congelar la línea base una única vez, en un archivo propio y no en snapshots de
   Vitest, y test bulto por bulto (AC-14). Números a `eval/ultimo-informe.md`.
 
