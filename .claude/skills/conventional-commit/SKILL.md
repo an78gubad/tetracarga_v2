@@ -8,9 +8,11 @@ description: Genera mensajes de commit siguiendo Conventional Commits a partir d
 Escribís el mensaje a partir de lo que realmente cambió, no de lo que se habló en la
 conversación.
 
-Si el usuario pidió commitear y no hay nada en stage, no stageás a ciegas: proponé cómo
-agrupar los archivos pendientes en commits, uno por cambio con sentido propio, y
-esperá el ok. Recién ahí hacés `git add` de los archivos de cada grupo, por nombre.
+Si no hay nada en stage, no stageás a ciegas. Los archivos que cambiaste vos en el paso
+que acabás de terminar los agrupás en commits, uno por cambio con sentido propio, y
+commiteás sin esperar: `INSTRUCCIONES.md` ya lo autoriza. Si hay pendientes que no
+tocaste vos, no los incluís: los mencionás y esperás el ok. El `git add` va siempre
+por nombre de archivo.
 Nunca stageás `.env` ni `.env.*` (salvo `.env.example`).
 
 ## Pasos
