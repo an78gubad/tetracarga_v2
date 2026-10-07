@@ -23,7 +23,10 @@ El porqué de las decisiones que más tientan a "mejorar" mientras se construye.
 
 Orden de colocación: los no apilables al final; después, volumen decreciente; a igual
 volumen, primero el que aguanta más peso encima. Los escenarios de la línea base van
-calibrados a ~115% del contenedor, salvo los que miden la sobrecarga a propósito.
+calibrados a ~115% de lo que entra (el volumen de la carga ronda 1,15 veces el que el
+acomodador coloca), salvo los que miden la sobrecarga de peso, que traen ~115% de la carga
+útil. Calibrados a 115% del volumen interno quedaban tipos enteros afuera: el acomodador
+llena entre 50% y 80%.
 
 Por qué, medido en una versión anterior. **No repetir esta investigación.**
 

@@ -15,7 +15,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
   con la ficha exacta de la naviera.
 - [x] 4. Catálogo de objetos, cada entrada con su fuente; sin fuente no entra. Al menos una
   entrada con medidas y sin peso (AC-18).
-- [x] 5. Los 10 escenarios: ~115% del contenedor salvo los de sobrecarga, sin ningún tipo que
+- [x] 5. Los 10 escenarios: ~115% de lo que entra salvo los de sobrecarga, sin ningún tipo que
   llene el contenedor solo.
 - [x] 6. Dataset de 50 descripciones, etiquetado por ítem.
 
