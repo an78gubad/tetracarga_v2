@@ -13,7 +13,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
 ## 1. Artefactos versionados
 - [x] 3. Catálogo de contenedores: 20', 40' y 40' HC, medidas internas y carga útil, cada uno
   con la ficha exacta de la naviera.
-- [ ] 4. Catálogo de objetos, cada entrada con su fuente; sin fuente no entra. Al menos una
+- [x] 4. Catálogo de objetos, cada entrada con su fuente; sin fuente no entra. Al menos una
   entrada con medidas y sin peso (AC-18).
 - [ ] 5. Los 10 escenarios: ~115% del contenedor salvo los de sobrecarga, sin ningún tipo que
   llene el contenedor solo.
