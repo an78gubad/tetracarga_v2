@@ -4,7 +4,7 @@ import { describe, expect, test } from 'vitest'
 
 // RF-08: el validador no comparte código con el acomodador, ni siquiera constantes. Cada uno
 // solo trae código de su propia carpeta; de afuera, solo tipos.
-const CARPETAS = ['src/validador']
+const CARPETAS = ['src/validador', 'src/acomodador']
 
 const IMPORTACION = /^\s*(?:import|export)\s+(type\s+)?(?:[^'"]*?\s+from\s+)?['"]([^'"]+)['"]/gm
 
