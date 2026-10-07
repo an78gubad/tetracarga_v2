@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { aListo, editar, faltantes, marcar } from './item'
+import { aListo, desdeListo, editar, faltantes, itemNuevo, limitarPesoEncima, marcar, renombrar, vaciar } from './item'
 import type { Item } from './tipos'
 
 const tambor: Item = {
@@ -66,5 +66,31 @@ describe('editar (RF-04)', () => {
       origen: 'declarado',
       valor: false,
     })
+  })
+})
+
+describe('alta, baja de datos y conversión', () => {
+  test('un ítem nuevo tiene todo por preguntar', () => {
+    expect(faltantes(itemNuevo('nuevo')).map((faltante) => faltante.campo)).toEqual([
+      'cantidad',
+      'largo',
+      'ancho',
+      'alto',
+      'peso',
+    ])
+  })
+
+  test('un campo borrado vuelve a faltar', () => {
+    expect(vaciar(tambor, 'largo').largo).toEqual({ origen: 'faltante', motivo: 'no-declarado' })
+  })
+
+  test('el peso máximo encima se declara o se quita', () => {
+    expect(limitarPesoEncima(tambor, 50).pesoMaximoEncima).toBe(50)
+    expect(limitarPesoEncima(limitarPesoEncima(tambor, 50), null).pesoMaximoEncima).toBeNull()
+  })
+
+  test('desdeListo y aListo son inversas', () => {
+    const listo = aListo(renombrar(editar(tambor, 'peso', 18.5), 'tambores'))!
+    expect(aListo(desdeListo(listo))).toEqual(listo)
   })
 })
