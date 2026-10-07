@@ -51,3 +51,11 @@ Por qué, medido en una versión anterior. **No repetir esta investigación.**
 - **La puerta es más chica que el interior y no se modela.** 2340 mm de ancho; 2280 mm de alto
   en 20' y 40', 2585 mm en el high cube. Un bulto puede entrar en el interior y no pasar por la
   puerta. El PRD no lo pide; si hace falta, es un requerimiento nuevo.
+- **Ningún objeto trae peso.** El de tambores, IBC y bidones depende del contenido. Se buscó
+  ficha de fabricante para objetos de peso propio (bolsas de cemento de 50 kg, de harina o
+  azúcar de 25 kg) y no hay: las medidas de bolsa solo aparecen en minoristas, que no cuentan
+  como fuente. El peso se pregunta siempre.
+- **Los pallets traen solo la base.** Como carga van cargados: el alto depende de lo que llevan
+  y se pregunta. La base del ARLOG sale de fabricantes porque la IRAM 10016 no es pública.
+- **Big bag afuera.** La única ficha da la medida nominal de la bolsa vacía, y llena se deforma.
+- **Ninguna marca de RF-06 precargada.** Ninguna ficha dice "no apilable" ni "este lado arriba".
