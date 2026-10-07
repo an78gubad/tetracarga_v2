@@ -17,7 +17,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
   entrada con medidas y sin peso (AC-18).
 - [x] 5. Los 10 escenarios: ~115% del contenedor salvo los de sobrecarga, sin ningún tipo que
   llene el contenedor solo.
-- [ ] 6. Dataset de 50 descripciones, etiquetado por ítem.
+- [x] 6. Dataset de 50 descripciones, etiquetado por ítem.
 
 ## 2. Feature A — Consolidación (RF-05, RF-07, RF-08, RF-09)
 - [ ] 7. Validador en `src/validador/`, sin traer código de fuera de su carpeta: límites,
