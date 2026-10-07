@@ -7,6 +7,7 @@ import { ESCENARIOS } from './escenarios/escenarios'
 import { ListaDeItems } from './ui/ListaDeItems'
 import { Resultado } from './ui/Resultado'
 import { SelectorDeContenedor } from './ui/SelectorDeContenedor'
+import { Vista3D } from './vista3d/Vista3D'
 
 export function App() {
   const [items, setItems] = useState<readonly Item[]>([])
@@ -43,6 +44,10 @@ export function App() {
         </label>
       </header>
       <SelectorDeContenedor elegido={contenedorId} onElegir={setContenedorId} />
+      {/* Solo lo que pasó el validador llega a dibujarse (RNF-03). */}
+      {preparacion.estado === 'lista' && preparacion.consolidacion.valida && (
+        <Vista3D disposicion={preparacion.consolidacion.disposicion} items={preparacion.items} contenedor={contenedor} />
+      )}
       <main className="trabajo">
         <ListaDeItems
           items={items}
