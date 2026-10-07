@@ -1,0 +1,386 @@
+:root {
+  /* Playa de contenedores: hormigón, tinta, amarillo de autoelevador; rojo solo para lo que falta. */
+  --hormigon: #e4e5e0;
+  --hormigon-claro: #f1f2ee;
+  --tinta: #17283a;
+  --acero: #56677a;
+  --linea: #c3c7c4;
+  --amarillo: #f2b705;
+  --rojo: #b3261e;
+  --azul-estimado: #2c5f93;
+  --fuente: 'Barlow', system-ui, sans-serif;
+  --fuente-titulos: 'Barlow Semi Condensed', 'Barlow', system-ui, sans-serif;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--hormigon);
+  color: var(--tinta);
+  font-family: var(--fuente);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fuente-titulos);
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--amarillo);
+  outline-offset: 2px;
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.pagina {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 20px;
+  margin-bottom: 20px;
+}
+
+.cabecera h1 {
+  font-size: 2.25rem;
+  letter-spacing: -0.01em;
+}
+
+.cabecera p {
+  margin: 0;
+  color: var(--acero);
+}
+
+.ejemplo {
+  margin-left: auto;
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  color: var(--acero);
+  font-size: 0.9rem;
+}
+
+select,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+select {
+  max-width: 100%;
+  padding: 4px 6px;
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  background: var(--hormigon-claro);
+}
+
+/* Selector de contenedor: los tres de perfil, a escala. */
+.selector {
+  border: 0;
+  margin: 0 0 24px;
+  padding: 0;
+}
+
+.selector legend {
+  font-family: var(--fuente-titulos);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.selector__opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.selector__opcion {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  padding: 14px 16px 12px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: var(--hormigon-claro);
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.selector__opcion input {
+  position: absolute;
+  opacity: 0;
+}
+
+.selector__opcion:has(input:focus-visible) {
+  outline: 3px solid var(--amarillo);
+  outline-offset: 2px;
+}
+
+.selector__opcion[data-elegido='true'] {
+  border-color: var(--tinta);
+}
+
+.selector__perfil {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.selector__perfil rect {
+  fill: none;
+  stroke: var(--acero);
+  stroke-width: 1;
+}
+
+.selector__opcion[data-elegido='true'] .selector__perfil rect {
+  fill: var(--amarillo);
+  stroke: var(--tinta);
+}
+
+.selector__nombre {
+  font-weight: 600;
+}
+
+.selector__dato {
+  font-size: 0.85rem;
+  color: var(--acero);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Carga y resultado. */
+.trabajo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .trabajo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.carga,
+.resultado {
+  background: var(--hormigon-claro);
+  border-radius: 6px;
+  padding: 18px 18px 20px;
+}
+
+.carga h2,
+.resultado h2 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.vacio {
+  color: var(--acero);
+  margin: 0 0 16px;
+}
+
+.tabla {
+  /* Ancla lo que va posicionado adentro, para que no escape del recorte. */
+  position: relative;
+  overflow-x: auto;
+  margin: 0 -6px 16px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 820px;
+}
+
+thead th {
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--acero);
+  padding: 0 6px 6px;
+  border-bottom: 1px solid var(--linea);
+}
+
+tbody th,
+tbody td {
+  padding: 8px 6px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--linea);
+  text-align: left;
+  font-weight: 400;
+}
+
+.fila__nombre,
+.campo input {
+  width: 100%;
+  padding: 5px 7px;
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.fila__nombre {
+  min-width: 130px;
+}
+
+.campo input {
+  font-variant-numeric: tabular-nums;
+  min-width: 64px;
+}
+
+.campo__nota {
+  display: block;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  margin-top: 3px;
+  color: var(--acero);
+}
+
+/* Estimado: lo completó el catálogo. Faltante: hay que preguntarlo. */
+.campo[data-estado='estimado'] input {
+  border-style: dashed;
+  border-color: var(--azul-estimado);
+  color: var(--azul-estimado);
+}
+
+.campo[data-estado='estimado'] .campo__nota {
+  color: var(--azul-estimado);
+}
+
+.campo[data-estado='faltante'] input,
+.campo[data-invalido='true'] input {
+  border-color: var(--rojo);
+  box-shadow: inset 3px 0 0 var(--rojo);
+}
+
+.campo[data-estado='faltante'] .campo__nota,
+.campo[data-invalido='true'] .campo__nota {
+  color: var(--rojo);
+}
+
+.fila__marcas {
+  display: grid;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.marca {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.marca[data-estado='estimado'] {
+  color: var(--azul-estimado);
+}
+
+.boton {
+  font: inherit;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--tinta);
+  color: var(--hormigon-claro);
+  cursor: pointer;
+}
+
+.boton-texto {
+  font: inherit;
+  font-size: 0.9rem;
+  border: 0;
+  background: none;
+  color: var(--acero);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+.boton-texto:hover {
+  color: var(--rojo);
+}
+
+.aviso {
+  margin: 0 0 8px;
+}
+
+.faltantes {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--rojo);
+}
+
+.resultado__titular {
+  font-family: var(--fuente-titulos);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 18px;
+}
+
+.medidor {
+  margin-bottom: 16px;
+}
+
+.medidor__cabecera {
+  display: flex;
+  justify-content: space-between;
+  font-variant-numeric: tabular-nums;
+}
+
+.medidor__barra {
+  height: 10px;
+  background: var(--hormigon);
+  border-radius: 2px;
+  margin: 4px 0 2px;
+  overflow: hidden;
+}
+
+.medidor__barra div {
+  height: 100%;
+  background: var(--tinta);
+}
+
+.medidor__detalle {
+  font-size: 0.85rem;
+  color: var(--acero);
+}
+
+.resultado h3 {
+  font-size: 1.05rem;
+  margin: 20px 0 6px;
+}
+
+.afuera {
+  margin: 0;
+  padding-left: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
