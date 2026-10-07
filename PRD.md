@@ -1,4 +1,4 @@
-# PRD-001v4: Tetracarga — describís una carga en castellano y la ves consolidada en un contenedor, en 3D
+# PRD-001v5: Tetracarga — describís una carga en castellano y la ves consolidada en un contenedor, en 3D
 
 ## Contexto y Problema
 Antes de exportar hay que responder si la mercadería entra en un contenedor y cómo acomodarla.
@@ -74,6 +74,9 @@ dónde salió cada dato completado.
   implementación de esa interfaz. Esa interfaz distingue una falla del proveedor de un error de
   interpretación y reintenta las transitorias un número acotado de veces. Un límite de velocidad es
   transitorio; credenciales inválidas o saldo agotado no lo son.
+- RNF-09: El proxy rechaza, sin llamar al proveedor, las descripciones de más de 2.000
+  caracteres, y acota la longitud de la respuesta que le pide al modelo. Una respuesta del
+  modelo que no cumple el esquema de ítems se descarta entera.
 
 ## Los tres artefactos versionados
 Primer entregable: sin ellos, RNF-02 y RNF-05 son decorativos.
@@ -142,6 +145,12 @@ Primer entregable: sin ellos, RNF-02 y RNF-05 son decorativos.
 - AC-24 (RF-08, RF-10): Dada una disposición de N bultos, cuando se toma cualquier prefijo de la
   secuencia, entonces cada bulto elevado del prefijo tiene al menos el 80% de su base apoyada sobre
   el piso o sobre bultos del mismo prefijo.
+- AC-25 (RNF-09): Dada una descripción de 2.001 caracteres, cuando se envía, entonces el proxy la
+  rechaza con un mensaje que dice el límite y la implementación del modelo no recibe ninguna
+  llamada.
+- AC-26 (RNF-09): Dada una respuesta del modelo que no cumple el esquema de ítems, cuando se
+  interpreta, entonces no se muestra ningún ítem de esa respuesta y se trata como la respuesta
+  vacía de AC-20.
 
 ## Stack
 TypeScript en todo el proyecto sobre Node 22 LTS, React con Vite, Three.js con geometría
@@ -164,6 +173,8 @@ proveedor inicial, detrás de la interfaz de RNF-08.
 - El 80% de apoyo de RF-08 es un criterio propio sin fuente.
 - El aprovechamiento de volumen no se compara contra ningún óptimo: RNF-05 detecta que cambió, no
   si es bueno.
+- El proxy no limita la cantidad de pedidos por cliente: un tercero puede gastar saldo con pedidos
+  válidos. Se acota con el tope de gasto configurado en el proveedor.
 
 ## Diferido
 Existe solo si todo lo anterior está terminado. No tiene criterios de aceptación y nada depende de
@@ -176,6 +187,8 @@ esto.
 - El modelo asocia el ítem a la entrada equivocada → RF-03 muestra cuál usó, RF-04 la hace
   corregible y RNF-02 (c) lo mide.
 - El modelo completa una medida que no existe en el catálogo → RNF-02 (b) lo verifica en binario.
+- Un tercero usa el proxy público y agota el saldo → RNF-09 acota el costo de cada pedido y el
+  tope de gasto del proveedor, el total.
 - El proveedor falla de manera intermitente y se confunde con un error de interpretación → RNF-08.
 - El acomodo es NP-duro y puede comerse el proyecto → se congela contra la línea base de RNF-05
   apenas los escenarios estén cerrados; mejorarlo queda fuera de alcance.
