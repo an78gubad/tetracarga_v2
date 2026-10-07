@@ -1,1 +1,5 @@
 @AGENTS.md
+
+@CONTEXTO.md
+
+@INSTRUCCIONES.md
