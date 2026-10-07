@@ -11,7 +11,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
   de RF-07.
 
 ## 1. Artefactos versionados
-- [ ] 3. Catálogo de contenedores: 20', 40' y 40' HC, medidas internas y carga útil, cada uno
+- [x] 3. Catálogo de contenedores: 20', 40' y 40' HC, medidas internas y carga útil, cada uno
   con la ficha exacta de la naviera.
 - [ ] 4. Catálogo de objetos, cada entrada con su fuente; sin fuente no entra. Al menos una
   entrada con medidas y sin peso (AC-18).
