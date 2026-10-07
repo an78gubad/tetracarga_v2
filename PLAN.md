@@ -6,7 +6,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
 
 ## 0. Base
 - [x] 1. Andamiaje: Vite, React, TypeScript 6, Vitest, Node 22, chequeo de tipos y CI.
-- [ ] 2. Tipos de dominio: ítem, campo con su origen (declarado / estimado con su entrada /
+- [x] 2. Tipos de dominio: ítem, campo con su origen (declarado / estimado con su entrada /
   faltante con su motivo), contenedor, bulto colocado, disposición. Milímetros enteros, ejes
   de RF-07.
 
