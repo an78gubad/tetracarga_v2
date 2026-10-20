@@ -67,3 +67,36 @@ Escenario `10-todo-junto`:
 | 40' high cube, de vuelta | 109 de 114 | 44,1% | 28.690 kg |
 
 Al editar la cantidad de heladeras de 14 a 4, recalcula: entran 103 de 104.
+
+## Interpretación contra el proveedor real (RNF-02, RNF-01)
+
+- Fecha: 2026-10-20, paso 22 del plan.
+- Comando: `npm run eval:interpretacion`, aparte de la suite (AC-16).
+- Entorno: Node 22.20.0, Windows 11; DeepSeek `deepseek-flash`, sin razonamiento, temperatura 0.
+- Cómo se cuenta, ítem por ítem y emparejado por orden de aparición, como está etiquetado el
+  dataset: (a) cada campo que la descripción da, cantidad incluida, tiene que quedar declarado con
+  ese valor; (b) cada campo ausente tiene que quedar faltante, o estimado con el valor exacto de la
+  entrada que nombra, y la cantidad ausente solo faltante; (c) la entrada que propone el modelo,
+  `null` incluido, tiene que ser la etiquetada. Una descripción que no se interpreta, o un ítem que
+  no aparece, cuentan como error en las tres.
+- RNF-01: tiempo de `interpretar()` de punta a punta, reintentos incluidos, sin pasar por HTTP.
+  Concurrencia 1: una descripción por vez, lo que ve una persona sola.
+
+| Métrica | Correctos | Resultado | Umbral |
+|---|---|---|---|
+| RNF-02 (a) declarados bien extraídos | 269/273 | 98,5% | ≥ 90% |
+| RNF-02 (b) ausentes estimados o preguntados | 117/117 | 100,0% | 100% |
+| RNF-02 (c) entrada del catálogo correcta | 78/78 | 100,0% | ≥ 90% |
+
+| RNF-01 | p50 | p95 | Máximo | Umbral |
+|---|---|---|---|---|
+| Concurrencia 1, 50 descripciones | 1,29 s | 1,76 s | 2,25 s | p95 < 10 s |
+
+Resultados: interpretada 50.
+Modelo: deepseek-flash.
+
+Errores:
+- d22 · tablero eléctrico · (a) cantidad 1: {"origen":"faltante","motivo":"no-declarado"}
+- d33 · bobinas de papel · (a) largo 1000: {"origen":"faltante","motivo":"sin-entrada"}
+- d33 · bobinas de papel · (a) ancho 1000: {"origen":"faltante","motivo":"sin-entrada"}
+- d41 · tanque de agua · (a) cantidad 1: {"origen":"faltante","motivo":"no-declarado"}
