@@ -1,4 +1,4 @@
-import type { CampoFaltable, Item, ItemListo, MotivoFaltante } from './tipos'
+import type { CampoFaltable, Item, ItemListo, MotivoFaltante } from './tipos.js'
 
 const CAMPOS_FALTABLES: readonly CampoFaltable[] = ['cantidad', 'largo', 'ancho', 'alto', 'peso']
 

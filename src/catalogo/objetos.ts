@@ -1,5 +1,5 @@
-import type { Kilos, Milimetros } from '../dominio/tipos'
-import type { Fuente } from './fuente'
+import type { Kilos, Milimetros } from '../dominio/tipos.js'
+import type { Fuente } from './fuente.js'
 
 /**
  * Un tipo de bulto conocido. Cada dato es null cuando la ficha no lo trae: ese campo se le
