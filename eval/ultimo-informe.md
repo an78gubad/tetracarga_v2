@@ -30,7 +30,7 @@ Tiempo: p95 de 20 corridas de consolidar() por escenario, una por vez, con el va
   draw calls, contando las llamadas de dibujo de WebGL2 en cada cuadro.
 - Entorno: Chrome 155 de escritorio, Windows 11, AMD Radeon integrada (ANGLE, Direct3D 11),
   16 núcleos, monitor de 60 Hz, lienzo de 1231×478 px con devicePixelRatio 1.
-- No es la herramienta de rendimiento de DevTools que nombra RNF-06: falta confirmar con ella.
+- Confirmado con el panel Rendimiento de DevTools, la herramienta que nombra RNF-06 (abajo).
 
 ### RNF-06: fps con 200 bultos
 
@@ -46,6 +46,12 @@ la carga completa a la vista.
 60 fps es el tope del monitor. Una corrida previa dio 53,5 fps promedio con el p95 en 29,9, y en
 la misma tanda la escena vacía (control en 0) bajó a 42 fps: el ruido era del entorno y no de la
 escena. Se descartó esa tanda y se repitió.
+
+Con el panel Rendimiento de DevTools, el mismo día y la misma carga: grabación de 4,43 s girando
+la vista con el mouse. La pista de cuadros queda toda verde, sin cuadros perdidos ni parciales;
+con zoom sobre 920–1.120 ms, cada cuadro dura entre 16,6 y 16,7 ms. Hilo principal en esos
+4.430 ms: 193 ms de scripts, 111 ms de sistema, 30 ms de pintura y 17 ms de renderización. INP:
+60 ms. Había extensiones del navegador activas, que suman a esos tiempos.
 
 Draw calls por cuadro: 3 fijos (piso, aristas del contenedor, contornos de los bultos) más uno por
 tipo. 200 bultos de 3 tipos dan 6; 109 bultos de 5 tipos (`10-todo-junto`) dan 8.
