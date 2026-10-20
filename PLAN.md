@@ -45,7 +45,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
 - [x] 18. Post-proceso determinístico: unidades, "AxBxC", peso total ÷ cantidad, respuesta
   fuera del esquema descartada entera (AC-26), id inexistente descartado (AC-17), completar
   solo desde el catálogo. AC-01 a AC-03, AC-11, AC-16, AC-18, AC-22.
-- [ ] 19. Implementación DeepSeek y proxy: manejador en `server/`, función en `api/`,
+- [x] 19. Implementación DeepSeek y proxy: manejador en `server/`, función en `api/`,
   middleware en Vite, key en `.env` sin `VITE_`. Rechazo de más de 2.000 caracteres sin
   llamar al modelo (AC-25) y longitud de respuesta acotada (RNF-09).
 - [ ] 20. Campo de texto libre que carga la lista del paso 12, con "estimado — entrada X" y
