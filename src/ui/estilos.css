@@ -395,6 +395,15 @@ tbody td {
   color: var(--rojo);
 }
 
+.faltantes li + li {
+  margin-top: 4px;
+}
+
+.faltantes__motivo {
+  color: var(--acero);
+  font-size: 0.9rem;
+}
+
 .resultado__titular {
   font-family: var(--fuente-titulos);
   font-size: 1.6rem;

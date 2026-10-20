@@ -1,14 +1,7 @@
 import type { Preparacion } from '../consolidacion/preparar'
-import type { CampoFaltable, Contenedor, Item } from '../dominio/tipos'
+import type { Contenedor, Item } from '../dominio/tipos'
 import { formatoDecimal, formatoEntero, formatoPorciento } from './formato'
-
-const CAMPO: Record<CampoFaltable, string> = {
-  cantidad: 'cantidad',
-  largo: 'largo',
-  ancho: 'ancho',
-  alto: 'alto',
-  peso: 'peso',
-}
+import { preguntar } from './preguntas'
 
 interface Props {
   readonly preparacion: Preparacion
@@ -48,13 +41,16 @@ export function Resultado({ preparacion, items, contenedor }: Props) {
     return (
       <section className="resultado" aria-labelledby="titulo-resultado">
         <h2 id="titulo-resultado">Resultado</h2>
-        <p className="aviso">Para consolidar, completá estos datos:</p>
+        <p className="aviso">Para consolidar, completá estos datos en la carga:</p>
         <ul className="faltantes">
-          {preparacion.faltantes.map(({ item, campo }) => (
-            <li key={`${item}-${campo}`}>
-              {nombre(item)}: {CAMPO[campo]}
-            </li>
-          ))}
+          {preparacion.faltantes.map((faltante) => {
+            const { pregunta, motivo } = preguntar(faltante)
+            return (
+              <li key={`${faltante.item}-${faltante.campo}`}>
+                <strong>{nombre(faltante.item)}:</strong> {pregunta} <span className="faltantes__motivo">{motivo}</span>
+              </li>
+            )
+          })}
         </ul>
       </section>
     )
