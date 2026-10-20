@@ -100,3 +100,28 @@ Errores:
 - d33 · bobinas de papel · (a) largo 1000: {"origen":"faltante","motivo":"sin-entrada"}
 - d33 · bobinas de papel · (a) ancho 1000: {"origen":"faltante","motivo":"sin-entrada"}
 - d41 · tanque de agua · (a) cantidad 1: {"origen":"faltante","motivo":"no-declarado"}
+
+### Después del paso 24: prompt ajustado y verificación de lo escrito
+
+- Fecha: 2026-10-20. Comando: `npm run eval:interpretacion`, una corrida por fila, mismas
+  condiciones que arriba.
+- Cambios: el prompt toma "un"/"una" como cantidad 1 y el diámetro como largo y ancho; y el código
+  descarta todo valor que el modelo dice haber copiado y no está escrito en la descripción
+  (`server/escrito.ts`).
+- Con temperatura 0 el modelo no es determinista: el mismo prompt dio (b) 100% y 96,6% en dos
+  corridas seguidas. En la segunda, d18 trajo largo y ancho del europallet (1200 × 800) como
+  declarados sin que la descripción los diera. Por eso la verificación va en el código.
+
+| Corrida | Prompt | Verificación | (a) | (b) | (c) | p95 RNF-01 |
+|---|---|---|---|---|---|---|
+| 18:09 | "un" sin "cada uno" | no | 100,0% | 99,1% | 100,0% | 1,66 s |
+| 18:10 | final | no | 100,0% | 100,0% | 100,0% | 1,66 s |
+| 18:11 | final | no | 99,6% | 96,6% | 100,0% | 1,82 s |
+| 18:15 | final | sí | 99,6% | 100,0% | 100,0% | 1,62 s |
+| 18:16 | final | sí | 100,0% | 100,0% | 100,0% | 1,64 s |
+| 18:17 | final | sí | 100,0% | 100,0% | 100,0% | 1,62 s |
+
+Errores con la verificación: uno solo, en 18:15, d22 "Un tablero…" con la cantidad por preguntar
+en vez de 1: no inventa nada, pregunta de más. Límite conocido: la verificación mira que el número
+esté escrito, no a qué campo corresponde; un valor inventado que coincide con otro número de la
+descripción pasa.
