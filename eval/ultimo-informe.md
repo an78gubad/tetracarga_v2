@@ -125,3 +125,21 @@ Errores con la verificación: uno solo, en 18:15, d22 "Un tablero…" con la can
 en vez de 1: no inventa nada, pregunta de más. Límite conocido: la verificación mira que el número
 esté escrito, no a qué campo corresponde; un valor inventado que coincide con otro número de la
 descripción pasa.
+
+### Después del paso 26: estética del Tetris
+
+- Fecha: 2026-10-20. Comando: `npm run dev` y la misma medición en la página, 5 s por etapa.
+- Escenario `08-doscientos-bultos` en el 40' high cube, reproduciendo la secuencia: cae un bulto
+  cada 140 ms, el peor caso de la animación.
+
+| Etapa | fps promedio | Cuadro p50 | Peor cuadro |
+|---|---|---|---|
+| En pausa | 30,0 | 33,3 ms | 34,1 ms |
+| Reproduciendo | 30,0 | 33,3 ms | 34,0 ms |
+| En pausa otra vez | 30,0 | 33,3 ms | 33,8 ms |
+
+En esta tanda el navegador limitó los cuadros a 30 por segundo, también con la escena quieta: la
+animación no agrega costo medible dentro de ese tope, pero el margen por encima de 30 no se pudo
+medir. Falta repetirlo con el panel Rendimiento de DevTools. Draw calls por cuadro: 4 fijos (piso,
+grilla, aristas del contenedor, contornos) más uno por tipo con bultos a la vista; con los 3 tipos,
+7.
