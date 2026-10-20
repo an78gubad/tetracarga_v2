@@ -60,7 +60,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
 - [x] 25. El aviso de la descripción no queda viejo cuando la lista cambia.
 - [x] 26. Diferido del PRD: tipografía de píxeles, grilla en el piso, caída animada al colocar cada
   bulto y recuadro "NEXT" con el bulto siguiente. Sin tocar AC-08, AC-09 ni RNF-06.
-- [ ] 27. Deploy en Vercel y prueba de punta a punta contra la función real.
+- [x] 27. Deploy en Vercel y prueba de punta a punta contra la función real.
 
 ## Dependencias
 Acordadas: React, React DOM, Vite, `@vitejs/plugin-react`, TypeScript 6, Vitest y los tipos
