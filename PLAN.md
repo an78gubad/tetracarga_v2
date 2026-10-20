@@ -50,7 +50,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
   llamar al modelo (AC-25) y longitud de respuesta acotada (RNF-09).
 - [x] 20. Campo de texto libre que carga la lista del paso 12, con "estimado — entrada X" y
   las preguntas pendientes.
-- [ ] 21. AC-19: el test arma su propio bundle y busca la key, la URL y el encabezado reales.
+- [x] 21. AC-19: el test arma su propio bundle y busca la key, la URL y el encabezado reales.
 - [ ] 22. Eval aparte: RNF-02 (a, b, c) y p95 de RNF-01 con concurrencia declarada, al
   informe con fecha y comando.
 
