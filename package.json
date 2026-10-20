@@ -14,7 +14,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "linea-base:registrar": "node scripts/registrar-linea-base.mjs",
-    "informe:consolidacion": "node scripts/informe-consolidacion.mjs"
+    "informe:consolidacion": "node scripts/informe-consolidacion.mjs",
+    "eval:interpretacion": "node scripts/eval-interpretacion.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",
