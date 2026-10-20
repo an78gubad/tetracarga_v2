@@ -48,7 +48,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
 - [x] 19. Implementación DeepSeek y proxy: manejador en `server/`, función en `api/`,
   middleware en Vite, key en `.env` sin `VITE_`. Rechazo de más de 2.000 caracteres sin
   llamar al modelo (AC-25) y longitud de respuesta acotada (RNF-09).
-- [ ] 20. Campo de texto libre que carga la lista del paso 12, con "estimado — entrada X" y
+- [x] 20. Campo de texto libre que carga la lista del paso 12, con "estimado — entrada X" y
   las preguntas pendientes.
 - [ ] 21. AC-19: el test arma su propio bundle y busca la key, la URL y el encabezado reales.
 - [ ] 22. Eval aparte: RNF-02 (a, b, c) y p95 de RNF-01 con concurrencia declarada, al
