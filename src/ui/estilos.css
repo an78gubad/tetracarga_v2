@@ -171,21 +171,47 @@ select {
 
 /* Vista 3D. */
 .vista3d {
+  margin: 0 0 24px;
+}
+
+.vista3d__lienzo {
   height: min(56vh, 520px);
   min-height: 300px;
-  margin-bottom: 24px;
   border-radius: 6px;
   overflow: hidden;
   background: var(--hormigon-claro);
   cursor: grab;
 }
 
-.vista3d:active {
+.vista3d__lienzo:active {
   cursor: grabbing;
 }
 
-.vista3d canvas {
+.vista3d__lienzo canvas {
   display: block;
+}
+
+.vista3d__leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.vista3d__leyenda li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vista3d__muestra {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgb(23 40 58 / 0.35);
 }
 
 /* Carga y resultado. */

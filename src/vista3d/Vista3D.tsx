@@ -2,10 +2,10 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import type { Contenedor, Disposicion, ItemListo } from '../dominio/tipos'
+import { color } from './colores'
 import { agrupar } from './instancias'
 
 const METROS = 1 / 1000
-const COLOR_BULTO = 0x8a96a3
 const COLOR_CONTENEDOR = 0x17283a
 const COLOR_PISO = 0xd6d8d2
 const COLOR_FONDO = 0xf1f2ee
@@ -14,10 +14,12 @@ interface Props {
   readonly disposicion: Disposicion
   readonly items: readonly ItemListo[]
   readonly contenedor: Contenedor
+  /** Índice de color por id de ítem, que sobrevive a las ediciones de la lista (AC-09). */
+  readonly colores: ReadonlyMap<string, number>
 }
 
 /** La disposición en 3D navegable (RF-10): una malla instanciada por tipo de ítem (RNF-06). */
-export function Vista3D({ disposicion, items, contenedor }: Props) {
+export function Vista3D({ disposicion, items, contenedor, colores }: Props) {
   const lienzo = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -56,9 +58,10 @@ export function Vista3D({ disposicion, items, contenedor }: Props) {
     const materiales: THREE.Material[] = []
     const matriz = new THREE.Matrix4()
     const sinRotacion = new THREE.Quaternion()
-    for (const grupo of agrupar(disposicion, items)) {
+    const grupos = agrupar(disposicion, items)
+    for (const grupo of grupos) {
       if (grupo.instancias.length === 0) continue
-      const material = new THREE.MeshLambertMaterial({ color: COLOR_BULTO })
+      const material = new THREE.MeshLambertMaterial({ color: color(colores.get(grupo.item.id) ?? 0) })
       materiales.push(material)
       const malla = new THREE.InstancedMesh(cubo, material, grupo.instancias.length)
       grupo.instancias.forEach((instancia, indice) => {
@@ -110,14 +113,26 @@ export function Vista3D({ disposicion, items, contenedor }: Props) {
       renderer.dispose()
       renderer.domElement.remove()
     }
-  }, [disposicion, items, contenedor])
+  }, [disposicion, items, contenedor, colores])
 
   return (
-    <div
-      ref={lienzo}
-      className="vista3d"
-      role="img"
-      aria-label={`Disposición en 3D de ${disposicion.colocados.length} bultos en el ${contenedor.nombre}. Arrastrá para girarla.`}
-    />
+    <figure className="vista3d">
+      <div
+        ref={lienzo}
+        className="vista3d__lienzo"
+        role="img"
+        aria-label={`Disposición en 3D de ${disposicion.colocados.length} bultos en el ${contenedor.nombre}. Arrastrá para girarla.`}
+      />
+      <figcaption>
+        <ul className="vista3d__leyenda">
+          {items.map((item) => (
+            <li key={item.id}>
+              <span className="vista3d__muestra" style={{ background: color(colores.get(item.id) ?? 0) }} />
+              {item.nombre || 'ítem sin nombre'}
+            </li>
+          ))}
+        </ul>
+      </figcaption>
+    </figure>
   )
 }

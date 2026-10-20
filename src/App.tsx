@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { CONTENEDORES } from './catalogo/contenedores'
 import { preparar } from './consolidacion/preparar'
 import { desdeListo, itemNuevo } from './dominio/item'
@@ -7,6 +7,7 @@ import { ESCENARIOS } from './escenarios/escenarios'
 import { ListaDeItems } from './ui/ListaDeItems'
 import { Resultado } from './ui/Resultado'
 import { SelectorDeContenedor } from './ui/SelectorDeContenedor'
+import { asignarColores } from './vista3d/colores'
 import { Vista3D } from './vista3d/Vista3D'
 
 export function App() {
@@ -16,6 +17,13 @@ export function App() {
 
   // Se recalcula con cada dato confirmado y con cada cambio de contenedor (AC-12, AC-13).
   const preparacion = useMemo(() => preparar(items, contenedor), [items, contenedor])
+
+  // Cada asignación parte de la anterior: así el color queda atado al ítem (AC-09).
+  const coloresPrevios = useRef<ReadonlyMap<string, number>>(new Map())
+  const colores = useMemo(() => {
+    coloresPrevios.current = asignarColores(coloresPrevios.current, items.map((item) => item.id))
+    return coloresPrevios.current
+  }, [items])
 
   const cargarEjemplo = (id: string) => {
     const escenario = ESCENARIOS.find((candidato) => candidato.id === id)
@@ -46,7 +54,12 @@ export function App() {
       <SelectorDeContenedor elegido={contenedorId} onElegir={setContenedorId} />
       {/* Solo lo que pasó el validador llega a dibujarse (RNF-03). */}
       {preparacion.estado === 'lista' && preparacion.consolidacion.valida && (
-        <Vista3D disposicion={preparacion.consolidacion.disposicion} items={preparacion.items} contenedor={contenedor} />
+        <Vista3D
+          disposicion={preparacion.consolidacion.disposicion}
+          items={preparacion.items}
+          contenedor={contenedor}
+          colores={colores}
+        />
       )}
       <main className="trabajo">
         <ListaDeItems
