@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { OBJETOS, type EntradaObjeto } from '../src/catalogo/objetos.js'
 import type { Item } from '../src/dominio/tipos.js'
 import { consultar, type Opciones, type Resultado } from './consultar.js'
+import { soloLoEscrito } from './escrito.js'
 import { leerRespuesta } from './esquema.js'
 import type { Consulta, Modelo } from './modelo.js'
 import { aItem } from './normalizar.js'
@@ -26,6 +27,8 @@ Reglas:
 - Un ítem por cada tipo de bulto, en el orden en que aparecen. La descripción puede venir de corrido, con varios ítems en una misma frase.
 - Copiá cada número como está escrito, con su unidad. No conviertas unidades ni hagas cuentas. Si no dice la unidad, la unidad es null.
 - "AxBxC" o "A por B por C" es largo, ancho y alto, en ese orden.
+- Un diámetro va como largo y también como ancho, con su unidad: el bulto se toma por su caja envolvente.
+- "un" o "una" en singular delante del bulto es cantidad 1. "unos", "unas" o "varios" no dicen la cantidad, y "cada uno" o "cada una" tampoco: habla del peso o las medidas de cada bulto.
 - "alcance" es "total" si el peso es de todo el ítem ("pesan 500 kg en total", "todo junto 2 toneladas"), y "unitario" si es de cada bulto.
 - Lo que la descripción no dice va en null. No inventes ni estimes nada: tampoco la cantidad.
 - Los litros son capacidad, no medidas: sirven para elegir la entrada, no para llenar largo, ancho ni alto.
@@ -46,13 +49,15 @@ export interface OpcionesDeInterpretacion extends Opciones {
 
 /**
  * La descripción convertida en ítems (RF-02, RF-03). Una respuesta fuera del esquema se descarta
- * entera y se vuelve a preguntar, como una vacía (AC-26).
+ * entera y se vuelve a preguntar, como una vacía (AC-26); un valor que no está escrito en la
+ * descripción se descarta solo.
  */
 export function interpretar(
   modelo: Modelo,
   descripcion: string,
   { nuevoId = randomUUID, ...opciones }: OpcionesDeInterpretacion = {},
 ): Promise<Resultado<Item[]>> {
-  const leer = (texto: string) => leerRespuesta(texto, IDS)?.items.map((item) => aItem(item, CATALOGO, nuevoId())) ?? null
+  const leer = (texto: string) =>
+    leerRespuesta(texto, IDS)?.items.map((item) => aItem(soloLoEscrito(item, descripcion), CATALOGO, nuevoId())) ?? null
   return consultar(modelo, armarConsulta(descripcion), leer, opciones)
 }

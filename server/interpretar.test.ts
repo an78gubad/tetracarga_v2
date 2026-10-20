@@ -13,9 +13,10 @@ const respuesta = (...items: Partial<ItemDelModelo>[]) => JSON.stringify({ items
 const cm = (valor: number) => ({ valor, unidad: 'cm' as const })
 const kilos = (valor: number, alcance: 'unitario' | 'total' = 'unitario') => ({ valor, unidad: 'kg' as const, alcance })
 
-async function interpretarCon(...respuestas: string[]): Promise<Item[]> {
+/** Los números de la respuesta tienen que estar escritos en la descripción; si no, se descartan. */
+async function interpretarCon(descripcion: string, ...respuestas: string[]): Promise<Item[]> {
   let siguiente = 0
-  const resultado = await interpretar(new ModeloDePrueba(respuestas), 'descripción', {
+  const resultado = await interpretar(new ModeloDePrueba(respuestas), descripcion, {
     nuevoId: () => `item-${++siguiente}`,
     esperar: async () => {},
   })
@@ -25,6 +26,7 @@ async function interpretarCon(...respuestas: string[]): Promise<Item[]> {
 
 test('AC-01: dos ítems con sus cantidades, y las cajas en milímetros y kilos', async () => {
   const [cajas, tambores] = await interpretarCon(
+    '40 cajas de 60x40x30 de 12 kilos y 15 tambores de 200 litros',
     respuesta(
       { nombre: 'cajas', cantidad: 40, largo: cm(60), ancho: cm(40), alto: cm(30), peso: kilos(12) },
       { nombre: 'tambores de 200 litros', cantidad: 15, entrada: 'tambor-200l' },
@@ -41,7 +43,10 @@ test('AC-01: dos ítems con sus cantidades, y las cajas en milímetros y kilos',
 })
 
 test('AC-02: sin medidas y con entrada, se completan desde el catálogo marcadas con la entrada usada', async () => {
-  const [tambores] = await interpretarCon(respuesta({ nombre: 'tambores de 200 litros', cantidad: 15, entrada: 'tambor-200l' }))
+  const [tambores] = await interpretarCon(
+    '15 tambores de 200 litros',
+    respuesta({ nombre: 'tambores de 200 litros', cantidad: 15, entrada: 'tambor-200l' }),
+  )
   expect(tambores).toMatchObject({
     largo: { origen: 'estimado', valor: 585, entrada: 'tambor-200l' },
     ancho: { origen: 'estimado', valor: 585, entrada: 'tambor-200l' },
@@ -50,7 +55,7 @@ test('AC-02: sin medidas y con entrada, se completan desde el catálogo marcadas
 })
 
 test('AC-03: sin entrada y sin medidas, los campos quedan vacíos con su motivo y la consolidación se bloquea', async () => {
-  const [item] = await interpretarCon(respuesta({ nombre: 'esculturas', cantidad: 3 }))
+  const [item] = await interpretarCon('3 esculturas', respuesta({ nombre: 'esculturas', cantidad: 3 }))
   for (const campo of ['largo', 'ancho', 'alto', 'peso'] as const) {
     expect(item![campo]).toEqual({ origen: 'faltante', motivo: 'sin-entrada' })
   }
@@ -59,7 +64,7 @@ test('AC-03: sin entrada y sin medidas, los campos quedan vacíos con su motivo 
 })
 
 test('AC-18: una entrada con medidas y sin peso deja las medidas estimadas y el peso faltante con otro motivo', async () => {
-  const [tambores] = await interpretarCon(respuesta({ nombre: 'tambores', cantidad: 15, entrada: 'tambor-200l' }))
+  const [tambores] = await interpretarCon('15 tambores', respuesta({ nombre: 'tambores', cantidad: 15, entrada: 'tambor-200l' }))
   expect(tambores!.largo.origen).toBe('estimado')
   expect(tambores!.peso).toEqual({ origen: 'faltante', motivo: 'entrada-sin-dato' })
   expect(aListo(tambores!)).toBeNull()
@@ -67,6 +72,7 @@ test('AC-18: una entrada con medidas y sin peso deja las medidas estimadas y el 
 
 test('AC-22: sin cantidad, la cantidad queda faltante y la consolidación se bloquea', async () => {
   const [cajas] = await interpretarCon(
+    'cajas de 60x40x30 de 12 kilos',
     respuesta({ nombre: 'cajas', largo: cm(60), ancho: cm(40), alto: cm(30), peso: kilos(12) }),
   )
   expect(cajas!.cantidad).toEqual({ origen: 'faltante', motivo: 'no-declarado' })
@@ -75,6 +81,7 @@ test('AC-22: sin cantidad, la cantidad queda faltante y la consolidación se blo
 
 test('lo declarado manda sobre el catálogo, y lo que la entrada no trae se pregunta', async () => {
   const [pallets] = await interpretarCon(
+    '10 europallets de 1,5 m de alto y 600 kg',
     respuesta({ nombre: 'europallets', cantidad: 10, alto: { valor: 1.5, unidad: 'm' }, peso: kilos(600), entrada: 'europallet' }),
   )
   expect(pallets).toMatchObject({
@@ -88,7 +95,11 @@ test('lo declarado manda sobre el catálogo, y lo que la entrada no trae se preg
 describe('AC-17: id de catálogo inexistente', () => {
   test('descarta la respuesta entera en lugar de completar con algo parecido, y vuelve a preguntar', async () => {
     const items = await interpretarCon(
-      respuesta({ nombre: 'cajas', cantidad: 5, largo: cm(60), ancho: cm(40), alto: cm(30) }, { nombre: 'tambores', cantidad: 15, entrada: 'tambor-200-litros' }),
+      '5 cajas de 60x40x30 y 15 tambores',
+      respuesta(
+        { nombre: 'cajas', cantidad: 5, largo: cm(60), ancho: cm(40), alto: cm(30) },
+        { nombre: 'tambores', cantidad: 15, entrada: 'tambor-200-litros' },
+      ),
       respuesta({ nombre: 'tambores', cantidad: 15, entrada: 'tambor-200l' }),
     )
     expect(items.map((item) => item.nombre)).toEqual(['tambores'])
@@ -96,7 +107,7 @@ describe('AC-17: id de catálogo inexistente', () => {
 
   test('si siempre lo inventa, no se muestra ningún ítem', async () => {
     const respuestas = Array(3).fill(respuesta({ nombre: 'tambores', cantidad: 15, entrada: 'tambor-chico' }))
-    const resultado = await interpretar(new ModeloDePrueba(respuestas), 'descripción', { esperar: async () => {} })
+    const resultado = await interpretar(new ModeloDePrueba(respuestas), '15 tambores', { esperar: async () => {} })
     expect(resultado).toEqual({ tipo: 'sin-interpretacion', intentos: 3 })
   })
 })
@@ -114,26 +125,38 @@ describe('AC-26: respuesta fuera del esquema', () => {
     ['un campo ausente', JSON.stringify({ items: [{ nombre: 'cajas', cantidad: 3 }] })],
   ])('%s: no se muestra ningún ítem de esa respuesta y se vuelve a preguntar', async (_, invalida) => {
     // Un ítem válido junto al inválido tampoco se muestra: se descarta la respuesta entera.
-    const conValido = invalida.startsWith('{"items":[') ? invalida.replace('{"items":[', `{"items":[${JSON.stringify({ ...vacio, nombre: 'bidones', cantidad: 4 })},`) : invalida
-    const items = await interpretarCon(conValido, respuesta({ nombre: 'cajas', cantidad: 3 }))
+    const conValido = invalida.startsWith('{"items":[')
+      ? invalida.replace('{"items":[', `{"items":[${JSON.stringify({ ...vacio, nombre: 'bidones', cantidad: 4 })},`)
+      : invalida
+    const items = await interpretarCon('3 cajas y 4 bidones', conValido, respuesta({ nombre: 'cajas', cantidad: 3 }))
     expect(items.map((item) => item.nombre)).toEqual(['cajas'])
   })
 
   test('un bloque de código alrededor del JSON se acepta', async () => {
-    const items = await interpretarCon('```json\n' + respuesta({ nombre: 'cajas', cantidad: 3 }) + '\n```')
+    const items = await interpretarCon('3 cajas', '```json\n' + respuesta({ nombre: 'cajas', cantidad: 3 }) + '\n```')
     expect(items).toHaveLength(1)
   })
 })
 
 describe('RF-02: unidades y peso', () => {
   test('una medida sin unidad está en centímetros', async () => {
-    const [cajas] = await interpretarCon(respuesta({ nombre: 'cajas', cantidad: 1, largo: { valor: 60, unidad: null } }))
+    const [cajas] = await interpretarCon(
+      'una caja de 60 de largo',
+      respuesta({ nombre: 'cajas', cantidad: 1, largo: { valor: 60, unidad: null } }),
+    )
     expect(cajas!.largo).toEqual({ origen: 'declarado', valor: 600 })
   })
 
   test('metros y milímetros se pasan a milímetros enteros', async () => {
     const [motores] = await interpretarCon(
-      respuesta({ nombre: 'motores', cantidad: 3, largo: { valor: 1.2, unidad: 'm' }, ancho: { valor: 805, unidad: 'mm' }, alto: { valor: 0.9, unidad: 'm' } }),
+      '3 motores de 1,2 m por 805 mm por 0,9 m',
+      respuesta({
+        nombre: 'motores',
+        cantidad: 3,
+        largo: { valor: 1.2, unidad: 'm' },
+        ancho: { valor: 805, unidad: 'mm' },
+        alto: { valor: 0.9, unidad: 'm' },
+      }),
     )
     expect([motores!.largo, motores!.ancho, motores!.alto]).toEqual([
       { origen: 'declarado', valor: 1200 },
@@ -143,12 +166,16 @@ describe('RF-02: unidades y peso', () => {
   })
 
   test('un peso total se divide por la cantidad', async () => {
-    const [cajas] = await interpretarCon(respuesta({ nombre: 'cajas', cantidad: 3, peso: kilos(1000, 'total') }))
+    const [cajas] = await interpretarCon(
+      '3 cajas, 1000 kg en total',
+      respuesta({ nombre: 'cajas', cantidad: 3, peso: kilos(1000, 'total') }),
+    )
     expect(cajas!.peso).toEqual({ origen: 'declarado', valor: 333.333 })
   })
 
   test('toneladas y gramos se pasan a kilos', async () => {
     const [bobinas, sobres] = await interpretarCon(
+      '4 bobinas que pesan 2 t en total y 100 sobres de 250 g',
       respuesta(
         { nombre: 'bobinas', cantidad: 4, peso: { valor: 2, unidad: 't', alcance: 'total' } },
         { nombre: 'sobres', cantidad: 100, peso: { valor: 250, unidad: 'g', alcance: 'unitario' } },
@@ -159,13 +186,61 @@ describe('RF-02: unidades y peso', () => {
   })
 
   test('un peso sin unidad está en kilos', async () => {
-    const [cajas] = await interpretarCon(respuesta({ nombre: 'cajas', cantidad: 1, peso: { valor: 12, unidad: null, alcance: 'unitario' } }))
+    const [cajas] = await interpretarCon(
+      'una caja de 12',
+      respuesta({ nombre: 'cajas', cantidad: 1, peso: { valor: 12, unidad: null, alcance: 'unitario' } }),
+    )
     expect(cajas!.peso).toEqual({ origen: 'declarado', valor: 12 })
   })
 
   test('un peso total sin cantidad no se divide ni se completa: se pregunta', async () => {
-    const [tambores] = await interpretarCon(respuesta({ nombre: 'tambores', peso: kilos(3000, 'total'), entrada: 'tambor-200l' }))
+    const [tambores] = await interpretarCon(
+      'tambores, 3000 kg en total',
+      respuesta({ nombre: 'tambores', peso: kilos(3000, 'total'), entrada: 'tambor-200l' }),
+    )
     expect(tambores!.peso).toEqual({ origen: 'faltante', motivo: 'no-declarado' })
+  })
+})
+
+describe('RF-03: un valor que no está escrito en la descripción no queda como declarado', () => {
+  test('las medidas que el modelo "sabe" se descartan y se completan desde el catálogo, marcadas', async () => {
+    // Pasó con el proveedor real: la descripción no da largo ni ancho y el modelo puso los del europallet.
+    const [pallets] = await interpretarCon(
+      '7 europallets de 1,8 metros de alto con 520 kg',
+      respuesta({
+        nombre: 'europallets',
+        cantidad: 7,
+        largo: { valor: 1200, unidad: 'mm' },
+        ancho: { valor: 800, unidad: 'mm' },
+        alto: { valor: 1.8, unidad: 'm' },
+        peso: kilos(520),
+        entrada: 'europallet',
+      }),
+    )
+    expect(pallets).toMatchObject({
+      largo: { origen: 'estimado', valor: 1200, entrada: 'europallet' },
+      ancho: { origen: 'estimado', valor: 800, entrada: 'europallet' },
+      alto: { origen: 'declarado', valor: 1800 },
+      peso: { origen: 'declarado', valor: 520 },
+    })
+  })
+
+  test('sin entrada, el valor inventado queda por preguntar', async () => {
+    const [cajas] = await interpretarCon('40 cajas', respuesta({ nombre: 'cajas', cantidad: 40, peso: kilos(10) }))
+    expect(cajas!.peso).toEqual({ origen: 'faltante', motivo: 'sin-entrada' })
+  })
+
+  test('una cantidad inventada queda por preguntar', async () => {
+    const [ibc] = await interpretarCon(
+      'IBC de 1000 litros con 1000 kilos cada uno',
+      respuesta({ nombre: 'IBC', cantidad: 2, peso: kilos(1000), entrada: 'ibc-1000l' }),
+    )
+    expect(ibc!.cantidad).toEqual({ origen: 'faltante', motivo: 'no-declarado' })
+  })
+
+  test('"un" y "una" son cantidad 1', async () => {
+    const [tablero] = await interpretarCon('Un tablero de 120x80x250 cm', respuesta({ nombre: 'tablero', cantidad: 1 }))
+    expect(tablero!.cantidad).toEqual({ origen: 'declarado', valor: 1 })
   })
 })
 
