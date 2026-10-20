@@ -42,7 +42,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
 ## 4. Feature C — Interpretación (RF-01, RF-02, RF-03, RNF-07, RNF-08, RNF-09)
 - [x] 17. Interfaz del modelo en `server/`: falla del proveedor (transitoria o no) frente a
   error de interpretación, reintentos acotados, implementación de prueba. AC-20.
-- [ ] 18. Post-proceso determinístico: unidades, "AxBxC", peso total ÷ cantidad, respuesta
+- [x] 18. Post-proceso determinístico: unidades, "AxBxC", peso total ÷ cantidad, respuesta
   fuera del esquema descartada entera (AC-26), id inexistente descartado (AC-17), completar
   solo desde el catálogo. AC-01 a AC-03, AC-11, AC-16, AC-18, AC-22.
 - [ ] 19. Implementación DeepSeek y proxy: manejador en `server/`, función en `api/`,
