@@ -1,6 +1,9 @@
 import { expect, test } from 'vitest'
+import { consolidar } from '../consolidacion/consolidar'
+import { CONTENEDORES } from '../catalogo/contenedores'
 import type { Disposicion, ItemListo } from '../dominio/tipos'
-import { agrupar, aristasDeBultos, VALORES_POR_BULTO } from './instancias'
+import { ESCENARIOS } from '../escenarios/escenarios'
+import { agrupar, aristasDeBultos, cantidadesVisibles, VALORES_POR_BULTO } from './instancias'
 
 const caja: ItemListo = {
   id: 'caja',
@@ -56,4 +59,17 @@ test('las aristas van en orden de carga, 12 por bulto, sobre el contorno de cada
     puntas.set(clave, (puntas.get(clave) ?? 0) + 1)
   }
   expect([...puntas.values()]).toEqual(Array(8).fill(3))
+})
+
+test('AC-08: en la posición k se ven exactamente los primeros k bultos de la secuencia', () => {
+  const escenario = ESCENARIOS.find((candidato) => candidato.id === '10-todo-junto')!
+  const consolidacion = consolidar(escenario.items, CONTENEDORES[escenario.contenedor])
+  if (!consolidacion.valida) throw new Error('el escenario no pasa el validador')
+  const grupos = agrupar(consolidacion.disposicion, escenario.items)
+  const total = consolidacion.disposicion.colocados.length
+  for (let k = 0; k <= total; k++) {
+    const cantidades = cantidadesVisibles(grupos, k)
+    const ordenes = grupos.flatMap((grupo, i) => grupo.instancias.slice(0, cantidades[i]).map((instancia) => instancia.orden))
+    expect(ordenes.sort((a, b) => a - b)).toEqual([...Array(k).keys()])
+  }
 })

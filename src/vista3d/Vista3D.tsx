@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import type { Contenedor, Disposicion, ItemListo } from '../dominio/tipos'
 import { color } from './colores'
-import { agrupar, aristasDeBultos } from './instancias'
+import { agrupar, aristasDeBultos, cantidadesVisibles, PUNTOS_POR_BULTO } from './instancias'
 
 const METROS = 1 / 1000
 const COLOR_CONTENEDOR = 0x17283a
@@ -18,9 +18,37 @@ interface Props {
   readonly colores: ReadonlyMap<string, number>
 }
 
+/** Lo que hay que tocar para mostrar otro prefijo de la secuencia, sin rearmar la escena. */
+interface Prefijo {
+  readonly grupos: ReturnType<typeof agrupar>
+  /** Una por grupo, en el mismo orden; null si el grupo no tiene bultos colocados. */
+  readonly mallas: readonly (THREE.InstancedMesh | null)[]
+  readonly contornos: THREE.BufferGeometry
+}
+
+function mostrar({ grupos, mallas, contornos }: Prefijo, visibles: number) {
+  cantidadesVisibles(grupos, visibles).forEach((cantidad, i) => {
+    const malla = mallas[i]
+    if (malla) malla.count = cantidad
+  })
+  contornos.setDrawRange(0, visibles * PUNTOS_POR_BULTO)
+}
+
 /** La disposición en 3D navegable (RF-10): una malla instanciada por tipo de ítem (RNF-06). */
 export function Vista3D({ disposicion, items, contenedor, colores }: Props) {
   const lienzo = useRef<HTMLDivElement>(null)
+  const total = disposicion.colocados.length
+  // El control arranca con la carga completa y vuelve a ella con cada disposición nueva.
+  const [visibles, setVisibles] = useState(total)
+  const [disposicionPrevia, setDisposicionPrevia] = useState(disposicion)
+  if (disposicionPrevia !== disposicion) {
+    setDisposicionPrevia(disposicion)
+    setVisibles(total)
+  }
+  const prefijo = useRef<Prefijo | null>(null)
+  // La escena lee el prefijo al armarse sin depender de él: mover el control no la rearma.
+  const visiblesActuales = useRef(visibles)
+  visiblesActuales.current = visibles
 
   useEffect(() => {
     const anfitrion = lienzo.current
@@ -59,8 +87,8 @@ export function Vista3D({ disposicion, items, contenedor, colores }: Props) {
     const matriz = new THREE.Matrix4()
     const sinRotacion = new THREE.Quaternion()
     const grupos = agrupar(disposicion, items)
-    for (const grupo of grupos) {
-      if (grupo.instancias.length === 0) continue
+    const mallas = grupos.map((grupo) => {
+      if (grupo.instancias.length === 0) return null
       // Las caras se corren hacia atrás para que las aristas no titilen contra ellas.
       const material = new THREE.MeshLambertMaterial({
         color: color(colores.get(grupo.item.id) ?? 0),
@@ -76,7 +104,8 @@ export function Vista3D({ disposicion, items, contenedor, colores }: Props) {
       })
       malla.instanceMatrix.needsUpdate = true
       escena.add(malla)
-    }
+      return malla
+    })
 
     // Las aristas de cada bulto separan los del mismo tipo dentro de una pila (RF-10).
     const contornos = new THREE.BufferGeometry()
@@ -84,6 +113,8 @@ export function Vista3D({ disposicion, items, contenedor, colores }: Props) {
     escena.add(
       new THREE.LineSegments(contornos, new THREE.LineBasicMaterial({ color: COLOR_CONTENEDOR, transparent: true, opacity: 0.6 })),
     )
+    prefijo.current = { grupos, mallas, contornos }
+    mostrar(prefijo.current, visiblesActuales.current)
 
     const camara = new THREE.PerspectiveCamera(40, 1, 0.1, 200)
     // De costado y desde arriba, corrida hacia la puerta: el largo cruza el cuadro.
@@ -112,6 +143,7 @@ export function Vista3D({ disposicion, items, contenedor, colores }: Props) {
     ajustar()
 
     return () => {
+      prefijo.current = null
       cancelAnimationFrame(cuadro)
       observador.disconnect()
       controles.dispose()
@@ -128,14 +160,35 @@ export function Vista3D({ disposicion, items, contenedor, colores }: Props) {
     }
   }, [disposicion, items, contenedor, colores])
 
+  useEffect(() => {
+    if (prefijo.current) mostrar(prefijo.current, visibles)
+  }, [visibles])
+
+  const ultimo = visibles > 0 ? disposicion.colocados[visibles - 1] : undefined
+  const nombreDelUltimo = ultimo && (items.find((item) => item.id === ultimo.item)?.nombre || 'ítem sin nombre')
+
   return (
     <figure className="vista3d">
       <div
         ref={lienzo}
         className="vista3d__lienzo"
         role="img"
-        aria-label={`Disposición en 3D de ${disposicion.colocados.length} bultos en el ${contenedor.nombre}. Arrastrá para girarla.`}
+        aria-label={`Disposición en 3D de ${visibles} de ${total} bultos en el ${contenedor.nombre}. Arrastrá para girarla.`}
       />
+      <label className="vista3d__secuencia">
+        <span>
+          Secuencia de carga: <strong>{visibles}</strong> de {total} bultos
+          {nombreDelUltimo && <span className="vista3d__ultimo"> · último: {nombreDelUltimo}</span>}
+        </span>
+        <input
+          type="range"
+          min={0}
+          max={total}
+          step={1}
+          value={visibles}
+          onChange={(evento) => setVisibles(Number(evento.target.value))}
+        />
+      </label>
       <figcaption>
         <ul className="vista3d__leyenda">
           {items.map((item) => (

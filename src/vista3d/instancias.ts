@@ -66,3 +66,17 @@ export function aristasDeBultos(grupos: readonly GrupoDeInstancias[]): Float32Ar
   }
   return valores
 }
+
+/** Puntos por bulto en el arreglo de aristas, para acotar lo que se dibuja a un prefijo. */
+export const PUNTOS_POR_BULTO = VALORES_POR_BULTO / 3
+
+/**
+ * Cuántas instancias de cada grupo entran en los primeros `visibles` bultos de la secuencia
+ * (AC-08). Como cada grupo va en orden de carga, alcanza con dibujar las primeras de cada uno.
+ */
+export function cantidadesVisibles(grupos: readonly GrupoDeInstancias[], visibles: number): number[] {
+  return grupos.map((grupo) => {
+    const primeraOculta = grupo.instancias.findIndex((instancia) => instancia.orden >= visibles)
+    return primeraOculta === -1 ? grupo.instancias.length : primeraOculta
+  })
+}

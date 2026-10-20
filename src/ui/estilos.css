@@ -191,6 +191,23 @@ select {
   display: block;
 }
 
+.vista3d__secuencia {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.vista3d__secuencia input {
+  width: 100%;
+  accent-color: var(--tinta);
+}
+
+.vista3d__ultimo {
+  color: var(--acero);
+}
+
 .vista3d__leyenda {
   display: flex;
   flex-wrap: wrap;
