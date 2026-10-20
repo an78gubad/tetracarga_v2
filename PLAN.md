@@ -57,7 +57,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
 ## 5. Después del plan
 - [x] 23. CI en verde en los últimos pushes, AC-19 incluido sin `.env`.
 - [x] 24. Prompt: "un" como cantidad 1 y el diámetro como largo y ancho; volver a correr el eval.
-- [ ] 25. El aviso de la descripción no queda viejo cuando la lista cambia.
+- [x] 25. El aviso de la descripción no queda viejo cuando la lista cambia.
 - [ ] 26. Diferido del PRD: tipografía de píxeles, grilla en el piso, caída animada al colocar cada
   bulto y recuadro "NEXT" con el bulto siguiente. Sin tocar AC-08, AC-09 ni RNF-06.
 - [ ] 27. Deploy en Vercel y prueba de punta a punta contra la función real.
