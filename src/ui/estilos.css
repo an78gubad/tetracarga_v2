@@ -10,6 +10,8 @@
   --azul-estimado: #2c5f93;
   --fuente: 'Barlow', system-ui, sans-serif;
   --fuente-titulos: 'Barlow Semi Condensed', 'Barlow', system-ui, sans-serif;
+  /* La del Tetris, solo para títulos: en textos largos o en números de medidas cuesta leerla. */
+  --fuente-pixel: 'Press Start 2P', 'Barlow Semi Condensed', monospace;
   color-scheme: light;
 }
 
@@ -33,6 +35,13 @@ h3 {
   font-weight: 600;
   line-height: 1.1;
   margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--fuente-pixel);
+  font-weight: 400;
+  line-height: 1.35;
 }
 
 :focus-visible {
@@ -63,8 +72,7 @@ h3 {
 }
 
 .cabecera h1 {
-  font-size: 2.25rem;
-  letter-spacing: -0.01em;
+  font-size: 1.6rem;
 }
 
 .cabecera p {
@@ -105,9 +113,9 @@ select {
 }
 
 .selector legend {
-  font-family: var(--fuente-titulos);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-family: var(--fuente-pixel);
+  font-size: 0.95rem;
+  font-weight: 400;
   margin-bottom: 10px;
 }
 
@@ -191,12 +199,79 @@ select {
   display: block;
 }
 
+.vista3d__escenario {
+  position: relative;
+}
+
+.vista3d__controles {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.vista3d__reproducir {
+  flex: none;
+  width: 44px;
+  height: 36px;
+  padding: 0;
+}
+
 .vista3d__secuencia {
+  flex: 1;
   display: grid;
   gap: 4px;
-  margin-top: 12px;
   font-size: 0.95rem;
   font-variant-numeric: tabular-nums;
+}
+
+/* El recuadro NEXT del Tetris: el bulto que sigue en la secuencia. */
+.siguiente {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  width: 132px;
+  padding: 10px 8px 12px;
+  border: 3px solid var(--tinta);
+  background: rgb(241 242 238 / 0.92);
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  pointer-events: none;
+}
+
+.siguiente__titulo {
+  font-family: var(--fuente-pixel);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.siguiente__bloque {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgb(23 40 58 / 0.6);
+  box-shadow: inset -4px -4px 0 rgb(0 0 0 / 0.18), inset 4px 4px 0 rgb(255 255 255 / 0.3);
+}
+
+.siguiente__nombre {
+  font-weight: 600;
+}
+
+.siguiente__medidas {
+  color: var(--acero);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 560px) {
+  .siguiente {
+    top: 8px;
+    right: 8px;
+    width: 104px;
+    padding: 8px 6px;
+  }
 }
 
 .vista3d__secuencia input {
@@ -256,7 +331,7 @@ select {
 .descripcion h2,
 .carga h2,
 .resultado h2 {
-  font-size: 1.25rem;
+  font-size: 0.95rem;
   margin-bottom: 12px;
 }
 
