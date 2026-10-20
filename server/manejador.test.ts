@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { manejar, MAX_CARACTERES } from './manejador.js'
+import { MAX_CARACTERES } from '../src/dominio/interpretacion.js'
+import { manejar } from './manejador.js'
 import { FallaDelProveedor } from './modelo.js'
 import { ModeloDePrueba } from './modelo-de-prueba.js'
 

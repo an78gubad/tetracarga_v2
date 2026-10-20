@@ -1,24 +1,14 @@
-import type { Item } from '../src/dominio/tipos.js'
+import { contarCaracteres, MAX_CARACTERES, type CuerpoDeRespuesta } from '../src/dominio/interpretacion.js'
 import type { Opciones } from './consultar.js'
 import { interpretar } from './interpretar.js'
-import type { Modelo, MotivoDeFalla } from './modelo.js'
-
-/** Más que esto se rechaza sin llamar al proveedor (RNF-09, AC-25). */
-export const MAX_CARACTERES = 2000
-
-export type CuerpoDeRespuesta =
-  | { readonly tipo: 'interpretada'; readonly items: readonly Item[] }
-  | { readonly tipo: 'rechazada'; readonly mensaje: string }
-  | { readonly tipo: 'sin-interpretacion'; readonly mensaje: string }
-  | { readonly tipo: 'falla-del-proveedor'; readonly motivo: MotivoDeFalla; readonly mensaje: string }
-  | { readonly tipo: 'sin-configurar'; readonly mensaje: string }
+import type { Modelo } from './modelo.js'
 
 export interface RespuestaDelProxy {
   readonly estado: number
   readonly cuerpo: CuerpoDeRespuesta
 }
 
-// En castellano los números de cuatro cifras no se agrupan salvo que se pida: "2.000", no "2000".
+// "2.000" y no "2000" sin depender de los datos regionales: en "es" y "es-ES" cuatro cifras no se agrupan.
 const formatoMiles = new Intl.NumberFormat('es-AR', { useGrouping: 'always' })
 
 const rechazar = (estado: number, mensaje: string): RespuestaDelProxy => ({ estado, cuerpo: { tipo: 'rechazada', mensaje } })
@@ -42,8 +32,7 @@ export async function manejar(
   const descripcion = (pedido as { descripcion?: unknown } | null)?.descripcion
   if (typeof descripcion !== 'string') return rechazar(400, 'Falta la descripción de la carga.')
   if (descripcion.trim() === '') return rechazar(400, 'La descripción está vacía.')
-  // Por caracteres y no por unidades de UTF-16: un emoji cuenta uno.
-  const caracteres = [...descripcion].length
+  const caracteres = contarCaracteres(descripcion)
   if (caracteres > MAX_CARACTERES) {
     return rechazar(
       413,

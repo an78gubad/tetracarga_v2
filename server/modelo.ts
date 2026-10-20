@@ -1,3 +1,5 @@
+import type { MotivoDeFalla } from '../src/dominio/interpretacion.js'
+
 /**
  * El acceso al modelo pasa por esta interfaz (RNF-08): cambiar de proveedor es escribir otra
  * implementación. No sabe de prompts ni de ítems: recibe los mensajes armados y devuelve el texto
@@ -14,13 +16,7 @@ export interface Consulta {
   readonly maxTokens: number
 }
 
-export type MotivoDeFalla =
-  | 'limite-de-velocidad'
-  | 'proveedor-caido'
-  | 'sin-conexion'
-  | 'credenciales-invalidas'
-  | 'saldo-agotado'
-  | 'pedido-rechazado'
+export type { MotivoDeFalla }
 
 /** Un límite de velocidad es transitorio; credenciales inválidas o saldo agotado no lo son (RNF-08). */
 const TRANSITORIAS: ReadonlySet<MotivoDeFalla> = new Set(['limite-de-velocidad', 'proveedor-caido', 'sin-conexion'])
