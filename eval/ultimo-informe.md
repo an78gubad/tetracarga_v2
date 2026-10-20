@@ -143,3 +143,8 @@ animación no agrega costo medible dentro de ese tope, pero el margen por encima
 medir. Falta repetirlo con el panel Rendimiento de DevTools. Draw calls por cuadro: 4 fijos (piso,
 grilla, aristas del contenedor, contornos) más uno por tipo con bultos a la vista; con los 3 tipos,
 7.
+
+Segundo intento, mismo día, sobre el deploy de Vercel (`tetracarga-v2.vercel.app`): también limitado
+a 30 cuadros por segundo, y más irregular en pausa (p95 de 10 fps) que reproduciendo (p95 de 29,9).
+Sigue siendo el entorno y no la escena; una causa probable es el modo de ahorro de energía de
+Chrome, que limita a 30 fps. Queda sin confirmar el margen por encima de 30 con la animación.
