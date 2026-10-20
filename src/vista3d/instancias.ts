@@ -37,3 +37,32 @@ export function agrupar(disposicion: Disposicion, items: readonly ItemListo[]): 
   })
   return items.map((item) => ({ item, instancias: grupos.get(item.id)! }))
 }
+
+/** Valores por bulto en el arreglo de aristas: 12 aristas, 2 puntos cada una, 3 coordenadas. */
+export const VALORES_POR_BULTO = 12 * 2 * 3
+
+/**
+ * Las aristas de todos los bultos en un solo arreglo, en orden de carga: separan a simple vista
+ * dos bultos del mismo tipo dentro de una pila (RF-10), con un único draw call, y un prefijo de
+ * la secuencia es un prefijo del arreglo.
+ */
+export function aristasDeBultos(grupos: readonly GrupoDeInstancias[]): Float32Array {
+  const enOrden = grupos.flatMap((grupo) => grupo.instancias).sort((a, b) => a.orden - b.orden)
+  const valores = new Float32Array(enOrden.length * VALORES_POR_BULTO)
+  let i = 0
+  for (const { centro, tamano } of enOrden) {
+    const desde = centro.map((c, eje) => c - tamano[eje]! / 2)
+    const hasta = centro.map((c, eje) => c + tamano[eje]! / 2)
+    const esquina = (bits: number) => [0, 1, 2].map((eje) => ((bits >> eje) & 1 ? hasta[eje]! : desde[eje]!))
+    // Cada arista une dos esquinas que difieren en un solo eje.
+    for (let bits = 0; bits < 8; bits++) {
+      for (const eje of [1, 2, 4]) {
+        if (bits & eje) continue
+        valores.set(esquina(bits), i)
+        valores.set(esquina(bits | eje), i + 3)
+        i += 6
+      }
+    }
+  }
+  return valores
+}

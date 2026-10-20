@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import type { Contenedor, Disposicion, ItemListo } from '../dominio/tipos'
 import { color } from './colores'
-import { agrupar } from './instancias'
+import { agrupar, aristasDeBultos } from './instancias'
 
 const METROS = 1 / 1000
 const COLOR_CONTENEDOR = 0x17283a
@@ -61,7 +61,13 @@ export function Vista3D({ disposicion, items, contenedor, colores }: Props) {
     const grupos = agrupar(disposicion, items)
     for (const grupo of grupos) {
       if (grupo.instancias.length === 0) continue
-      const material = new THREE.MeshLambertMaterial({ color: color(colores.get(grupo.item.id) ?? 0) })
+      // Las caras se corren hacia atrás para que las aristas no titilen contra ellas.
+      const material = new THREE.MeshLambertMaterial({
+        color: color(colores.get(grupo.item.id) ?? 0),
+        polygonOffset: true,
+        polygonOffsetFactor: 1,
+        polygonOffsetUnits: 1,
+      })
       materiales.push(material)
       const malla = new THREE.InstancedMesh(cubo, material, grupo.instancias.length)
       grupo.instancias.forEach((instancia, indice) => {
@@ -71,6 +77,13 @@ export function Vista3D({ disposicion, items, contenedor, colores }: Props) {
       malla.instanceMatrix.needsUpdate = true
       escena.add(malla)
     }
+
+    // Las aristas de cada bulto separan los del mismo tipo dentro de una pila (RF-10).
+    const contornos = new THREE.BufferGeometry()
+    contornos.setAttribute('position', new THREE.BufferAttribute(aristasDeBultos(grupos), 3))
+    escena.add(
+      new THREE.LineSegments(contornos, new THREE.LineBasicMaterial({ color: COLOR_CONTENEDOR, transparent: true, opacity: 0.6 })),
+    )
 
     const camara = new THREE.PerspectiveCamera(40, 1, 0.1, 200)
     // De costado y desde arriba, corrida hacia la puerta: el largo cruza el cuadro.

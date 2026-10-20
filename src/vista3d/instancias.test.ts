@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import type { Disposicion, ItemListo } from '../dominio/tipos'
-import { agrupar } from './instancias'
+import { agrupar, aristasDeBultos, VALORES_POR_BULTO } from './instancias'
 
 const caja: ItemListo = {
   id: 'caja',
@@ -39,4 +39,21 @@ test('agrupa por tipo, en orden de carga, en metros, con el alto en y y el ancho
 test('un tipo sin bultos colocados queda con su grupo vacío', () => {
   const [, tambores] = agrupar({ ...disposicion, colocados: disposicion.colocados.slice(0, 1) }, [caja, tambor])
   expect(tambores!.instancias).toEqual([])
+})
+
+test('las aristas van en orden de carga, 12 por bulto, sobre el contorno de cada uno', () => {
+  const valores = aristasDeBultos(agrupar(disposicion, [caja, tambor]))
+  expect(valores).toHaveLength(3 * VALORES_POR_BULTO)
+  // El segundo bulto cargado es el tambor: sus aristas arrancan en x = 0,6.
+  const delTambor = valores.slice(VALORES_POR_BULTO, 2 * VALORES_POR_BULTO)
+  const xs = delTambor.filter((_, i) => i % 3 === 0)
+  expect(Math.min(...xs)).toBeCloseTo(0.6)
+  expect(Math.max(...xs)).toBeCloseTo(1.185)
+  // Las 24 puntas tocan las 8 esquinas, 3 veces cada una.
+  const puntas = new Map<string, number>()
+  for (let i = 0; i < delTambor.length; i += 3) {
+    const clave = [...delTambor.slice(i, i + 3)].map((v) => v.toFixed(4)).join()
+    puntas.set(clave, (puntas.get(clave) ?? 0) + 1)
+  }
+  expect([...puntas.values()]).toEqual(Array(8).fill(3))
 })
