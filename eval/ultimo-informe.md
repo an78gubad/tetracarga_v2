@@ -22,3 +22,42 @@ Números medidos. Cada sección dice cuándo y con qué comando salieron; no se 
 | 10-todo-junto | 40' high cube | 109/114 | 5 | 0 | 65,2% | 44,1% | 207 ms |
 
 Tiempo: p95 de 20 corridas de consolidar() por escenario, una por vez, con el validador incluido.
+
+## Vista 3D en el navegador (RNF-06, AC-13)
+
+- Fecha: 2026-10-20, paso 16 del plan.
+- Comando: `npm run dev` y medición en la página con `requestAnimationFrame`, 8 s por corrida; los
+  draw calls, contando las llamadas de dibujo de WebGL2 en cada cuadro.
+- Entorno: Chrome 155 de escritorio, Windows 11, AMD Radeon integrada (ANGLE, Direct3D 11),
+  16 núcleos, monitor de 60 Hz, lienzo de 1231×478 px con devicePixelRatio 1.
+- No es la herramienta de rendimiento de DevTools que nombra RNF-06: falta confirmar con ella.
+
+### RNF-06: fps con 200 bultos
+
+Escenario `08-doscientos-bultos` en el 40' high cube, donde entran los 200 bultos (3 tipos), con
+la carga completa a la vista.
+
+| Corrida | Cuadros | fps promedio | fps del cuadro p95 | Cuadro p50 | Peor cuadro |
+|---|---|---|---|---|---|
+| 1 | 479 | 60,0 | 59,5 | 16,7 ms | 17,4 ms |
+| 2 | 478 | 60,0 | 59,2 | 16,7 ms | 17,4 ms |
+| 3 | 478 | 60,0 | 59,5 | 16,7 ms | 17,3 ms |
+
+60 fps es el tope del monitor. Una corrida previa dio 53,5 fps promedio con el p95 en 29,9, y en
+la misma tanda la escena vacía (control en 0) bajó a 42 fps: el ruido era del entorno y no de la
+escena. Se descartó esa tanda y se repitió.
+
+Draw calls por cuadro: 3 fijos (piso, aristas del contenedor, contornos de los bultos) más uno por
+tipo. 200 bultos de 3 tipos dan 6; 109 bultos de 5 tipos (`10-todo-junto`) dan 8.
+
+### AC-13: recalcular al cambiar de contenedor
+
+Escenario `10-todo-junto`:
+
+| Contenedor | Entran | Peso | Carga útil |
+|---|---|---|---|
+| 40' high cube | 109 de 114 | 44,1% | 28.690 kg |
+| 20' estándar | 34 de 114 | 21,3% | 28.300 kg |
+| 40' high cube, de vuelta | 109 de 114 | 44,1% | 28.690 kg |
+
+Al editar la cantidad de heladeras de 14 a 4, recalcula: entran 103 de 104.
