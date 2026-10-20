@@ -40,7 +40,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
   fps con 200 bultos (RNF-06) al informe.
 
 ## 4. Feature C — Interpretación (RF-01, RF-02, RF-03, RNF-07, RNF-08, RNF-09)
-- [ ] 17. Interfaz del modelo en `server/`: falla del proveedor (transitoria o no) frente a
+- [x] 17. Interfaz del modelo en `server/`: falla del proveedor (transitoria o no) frente a
   error de interpretación, reintentos acotados, implementación de prueba. AC-20.
 - [ ] 18. Post-proceso determinístico: unidades, "AxBxC", peso total ÷ cantidad, respuesta
   fuera del esquema descartada entera (AC-26), id inexistente descartado (AC-17), completar
