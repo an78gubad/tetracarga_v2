@@ -4,6 +4,7 @@ import { preparar } from './consolidacion/preparar'
 import { desdeListo, itemNuevo } from './dominio/item'
 import type { ContenedorId, Item } from './dominio/tipos'
 import { ESCENARIOS } from './escenarios/escenarios'
+import { Descripcion } from './ui/Descripcion'
 import { ListaDeItems } from './ui/ListaDeItems'
 import { Resultado } from './ui/Resultado'
 import { SelectorDeContenedor } from './ui/SelectorDeContenedor'
@@ -51,6 +52,7 @@ export function App() {
           </select>
         </label>
       </header>
+      <Descripcion onAgregar={(nuevos) => setItems((actuales) => [...actuales, ...nuevos])} />
       <SelectorDeContenedor elegido={contenedorId} onElegir={setContenedorId} />
       {/* Solo lo que pasó el validador llega a dibujarse (RNF-03). */}
       {preparacion.estado === 'lista' && preparacion.consolidacion.valida && (

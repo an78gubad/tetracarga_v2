@@ -245,6 +245,7 @@ select {
   }
 }
 
+.descripcion,
 .carga,
 .resultado {
   background: var(--hormigon-claro);
@@ -252,6 +253,7 @@ select {
   padding: 18px 18px 20px;
 }
 
+.descripcion h2,
 .carga h2,
 .resultado h2 {
   font-size: 1.25rem;
@@ -454,4 +456,60 @@ tbody td {
   * {
     transition: none !important;
   }
+}
+
+/* Descripción en texto libre. */
+.descripcion {
+  margin-bottom: 24px;
+}
+
+.descripcion textarea {
+  display: block;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  background: #fff;
+  resize: vertical;
+}
+
+.descripcion textarea:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 1px;
+}
+
+.descripcion__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 10px;
+}
+
+.descripcion__contador {
+  font-size: 0.85rem;
+  color: var(--acero);
+  font-variant-numeric: tabular-nums;
+}
+
+.descripcion__contador[data-excedido='true'] {
+  color: var(--rojo);
+  font-weight: 600;
+}
+
+.boton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.descripcion__aviso {
+  margin: 10px 0 0;
+  min-height: 1.45em;
+}
+
+.descripcion__aviso[data-tipo='error'] {
+  color: var(--rojo);
 }
