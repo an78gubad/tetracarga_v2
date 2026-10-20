@@ -52,7 +52,7 @@ export function App() {
           </select>
         </label>
       </header>
-      <Descripcion onAgregar={(nuevos) => setItems((actuales) => [...actuales, ...nuevos])} />
+      <Descripcion items={items} onAgregar={(nuevos) => setItems((actuales) => [...actuales, ...nuevos])} />
       <SelectorDeContenedor elegido={contenedorId} onElegir={setContenedorId} />
       {/* Solo lo que pasó el validador llega a dibujarse (RNF-03). */}
       {preparacion.estado === 'lista' && preparacion.consolidacion.valida && (

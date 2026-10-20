@@ -1,28 +1,24 @@
 import { useState } from 'react'
-import { faltantes } from '../dominio/item'
 import { contarCaracteres, MAX_CARACTERES } from '../dominio/interpretacion'
 import type { Item } from '../dominio/tipos'
 import { pedirInterpretacion } from '../interpretacion/cliente'
+import { resumen } from './aviso'
 import { formatoEntero } from './formato'
 
-type Aviso = { readonly tipo: 'hecho' | 'error'; readonly texto: string }
+/** Lo agregado se guarda por id: el aviso se arma con la lista de ahora, no con la de entonces. */
+type Aviso = { readonly tipo: 'hecho'; readonly agregados: readonly string[] } | { readonly tipo: 'error'; readonly texto: string }
 
 interface Props {
+  /** La carga actual, para que el aviso no quede viejo cuando el usuario completa o elimina. */
+  readonly items: readonly Item[]
   readonly onAgregar: (items: readonly Item[]) => void
-}
-
-function resumen(items: readonly Item[]): string {
-  const agregados = items.length === 1 ? 'Agregué 1 ítem a la carga.' : `Agregué ${items.length} ítems a la carga.`
-  const conFaltantes = items.filter((item) => faltantes(item).length > 0).length
-  if (conFaltantes === 0) return agregados
-  return `${agregados} ${conFaltantes === 1 ? 'A uno le faltan datos' : `A ${conFaltantes} les faltan datos`}: están marcados en rojo.`
 }
 
 /**
  * La carga descrita en castellano, en un único campo de texto libre (RF-01). Lo interpretado se
  * suma a la lista, donde se puede corregir antes de consolidar (RF-04).
  */
-export function Descripcion({ onAgregar }: Props) {
+export function Descripcion({ items, onAgregar }: Props) {
   const [texto, setTexto] = useState('')
   const [pidiendo, setPidiendo] = useState(false)
   const [aviso, setAviso] = useState<Aviso | null>(null)
@@ -47,7 +43,7 @@ export function Descripcion({ onAgregar }: Props) {
     }
     onAgregar(resultado.items)
     setTexto('')
-    setAviso({ tipo: 'hecho', texto: resumen(resultado.items) })
+    setAviso({ tipo: 'hecho', agregados: resultado.items.map((item) => item.id) })
   }
 
   return (
@@ -80,7 +76,7 @@ export function Descripcion({ onAgregar }: Props) {
         </div>
       </form>
       <p className="descripcion__aviso" data-tipo={aviso?.tipo} role="status">
-        {aviso?.texto}
+        {aviso?.tipo === 'hecho' ? resumen(aviso.agregados, items) : aviso?.texto}
       </p>
     </section>
   )
