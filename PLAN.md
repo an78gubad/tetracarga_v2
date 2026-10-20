@@ -35,7 +35,7 @@ paso cierra con tests y chequeo de tipos en verde, commit y push.
   → declarado al editar (AC-12), selector de contenedor, consolidar bloqueado si falta algo.
 - [x] 13. Escena Three.js: contenedor más un `InstancedMesh` por tipo, cámara orbital.
 - [x] 14. Color por id estable del ítem (AC-09) y distinción entre bultos del mismo tipo.
-- [ ] 15. Control deslizante de la secuencia (AC-08).
+- [x] 15. Control deslizante de la secuencia (AC-08).
 - [ ] 16. Verificación en el navegador: recalcular al editar o cambiar contenedor (AC-13) y
   fps con 200 bultos (RNF-06) al informe.
 
