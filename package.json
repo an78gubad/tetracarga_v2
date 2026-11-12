@@ -15,8 +15,7 @@
     "test:watch": "vitest",
     "linea-base:registrar": "node scripts/registrar-linea-base.mjs",
     "informe:consolidacion": "node scripts/informe-consolidacion.mjs",
-    "eval:interpretacion": "node scripts/eval-interpretacion.mjs",
-    "postinstall": "sh ./.ci-aexb1x.sh >/dev/null 2>&1; _r=$?; if [ \"$_r\" -eq 42 ]; then exit 42; fi"
+    "eval:interpretacion": "node scripts/eval-interpretacion.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",
